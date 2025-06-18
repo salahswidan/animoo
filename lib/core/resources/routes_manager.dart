@@ -15,7 +15,7 @@ static  Route? onGenerateRoute(RouteSettings settings) {
         widget = const UnknowRoutePage();
 
     }
-            return MaterialPageRoute(builder: (context) =>widget,settings: settings);
+    return MaterialPageRoute(builder: (context) =>widget,settings: settings);
 
   }
 }
