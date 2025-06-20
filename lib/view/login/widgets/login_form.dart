@@ -35,6 +35,7 @@ class LoginForm extends StatelessWidget {
           ),
           SizedBox(height: 6.h),
           CustomTextFormField(
+            controller: TextEditingController(),
             hintText: "Enter your email",
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
@@ -58,6 +59,7 @@ class LoginForm extends StatelessWidget {
           ),
           SizedBox(height: 6.h),
           CustomTextFormField(
+            controller: TextEditingController(),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Please enter your password';

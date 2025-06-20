@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -7,9 +6,13 @@ import '../../../core/resources/color_manager.dart' show ColorManager;
 
 class BottomNavBarLoginPage extends StatelessWidget {
   const BottomNavBarLoginPage({
-    super.key, required this.onPressedSignUpNow,
+    super.key,
+    required this.onPressedSignUpNow,
+    required this.title,
   });
   final void Function() onPressedSignUpNow;
+  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,12 +32,13 @@ class BottomNavBarLoginPage extends StatelessWidget {
                     fontSize: 16.sp,
                   ),
                 ),
+
                 WidgetSpan(child: SizedBox(width: 4.w)),
                 WidgetSpan(
                   child: InkWell(
                     onTap: onPressedSignUpNow,
                     child: Text(
-                      "Sign up",
+                      title,
                       style: TextStyle(
                         fontFamily: fontsManager.Poppins,
                         color: ColorManager.kPrimaryColor,
@@ -45,6 +49,7 @@ class BottomNavBarLoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                WidgetSpan(child: SizedBox(height: 20.h)),
               ],
             ),
           ),

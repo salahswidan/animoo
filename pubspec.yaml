@@ -30,6 +30,7 @@ environment:
 dependencies:
   animate_do: ^4.2.0
   cupertino_icons: ^1.0.8
+  dotted_border: ^3.0.1
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.4.6
@@ -79,7 +80,6 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
-
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #

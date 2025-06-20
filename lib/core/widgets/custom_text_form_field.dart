@@ -8,9 +8,12 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     this.hintText,
-    this.borderRadius = 20,
+    this.borderRadius = 12,
     this.suffixIcon,
-    this.obscureText,  this.validator, this.keyboardType,
+    this.obscureText,
+    this.validator,
+    this.keyboardType,
+    required this.controller,
   });
   final String? hintText;
   final double borderRadius;
@@ -18,15 +21,20 @@ class CustomTextFormField extends StatelessWidget {
   final bool? obscureText;
   final String? Function(String? value)? validator;
   final TextInputType? keyboardType;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
+      onTapOutside: (event) {
+        FocusScope.of(context).unfocus();
+      },
       keyboardType: keyboardType,
-      validator:validator,
+      validator: validator,
       obscuringCharacter: '*',
-      style: TextStyle(color: ColorManager.kPrimaryColor,fontSize: 14.sp),
-      obscureText:obscureText ?? false,
+      style: TextStyle(color: ColorManager.kPrimaryColor, fontSize: 14.sp),
+      obscureText: obscureText ?? false,
       decoration: InputDecoration(
         filled: true,
         suffixIcon: suffixIcon,
@@ -35,11 +43,16 @@ class CustomTextFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyle(
           fontFamily: fontsManager.Poppins,
-          color: ColorManager.kGreyColor),
+          color: ColorManager.kGreyColor,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius.r),
         ),
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius.r),
+          borderSide: BorderSide(color: ColorManager.kPrimaryColor),
+        ),
+        enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius.r),
           borderSide: BorderSide(color: ColorManager.kPrimaryColor),
         ),
