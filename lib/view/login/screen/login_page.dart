@@ -38,7 +38,14 @@ class LoginPage extends StatelessWidget {
                     visible: false,
                     onPressedAtEye: () {},
                   ),
-                  ForgetPasswordLogin(onPressedAtForgetPassword: () {}),
+                  ForgetPasswordLogin(
+                    onPressedAtForgetPassword: () {
+                      Navigator.pushNamed(
+                        context,
+                        RoutesName.forgetPasswordPage,
+                      );
+                    },
+                  ),
                   SizedBox(height: 31.h),
                   App_Button(onTap: () {}, text: "Login"),
                 ],

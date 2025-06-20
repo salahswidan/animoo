@@ -15,7 +15,7 @@ class SignUpPage extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: BottomNavBarLoginPage(
         onPressedSignUpNow: () {
-          Navigator.pushNamed(context, '/');
+          Navigator.of(context).pop();
         },
         title: "Login",
       ),
