@@ -4,6 +4,8 @@ import 'package:animoo/view/login/screen/login_page.dart';
 import 'package:animoo/view/signup/screen/sign_up_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../view/otp_verfication_code/screen/otp_verfication_code_page.dart';
+
 class RoutesManager {
 static  Route? onGenerateRoute(RouteSettings settings) {
     Widget widget;
@@ -14,6 +16,8 @@ static  Route? onGenerateRoute(RouteSettings settings) {
         widget = SignUpPage();
       case RoutesName.forgetPasswordPage:
         widget = ForgetPasswordPage();
+      case RoutesName.otpVerficationCodePage:
+        widget = OtpVerficationCodePage();
       default:
         widget = const UnknowRoutePage();
 
@@ -27,4 +31,5 @@ class RoutesName {
   static const String loginPage = '/';
   static const String signupPage = '/signupPage';
   static const String forgetPasswordPage = '/forgetPasswordPage';
+  static const String otpVerficationCodePage = '/OtpVerficationCodePage';
 }

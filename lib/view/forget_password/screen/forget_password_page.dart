@@ -1,10 +1,11 @@
 import 'package:animoo/core/resources/assets_values_manager.dart';
 import 'package:animoo/core/resources/color_manager.dart';
+import 'package:animoo/core/resources/routes_manager.dart';
 import 'package:animoo/core/widgets/bottons/app_button.dart';
-import 'package:animoo/view/forget_password/widgets/forget_password_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/widgets/app_bar/simple_app_bar.dart';
 import '../../signup/widgets/custom_text_field_with_title.dart';
 
 class ForgetPasswordPage extends StatelessWidget {
@@ -13,7 +14,7 @@ class ForgetPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ForgetPasswordAppBar(),
+      appBar: SimpleAppBar(title: "Back"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -51,7 +52,14 @@ class ForgetPasswordPage extends StatelessWidget {
                   fieldTitle: "Email",
                 ),
                 SizedBox(height: 135.h),
-                App_Button(onTap: () {}, text: "Send Code"),
+                App_Button(
+                  onTap: () {
+                    Navigator.of(
+                      context,
+                    ).pushNamed(RoutesName.otpVerficationCodePage);
+                  },
+                  text: "Send Code",
+                ),
               ],
             ),
           ),

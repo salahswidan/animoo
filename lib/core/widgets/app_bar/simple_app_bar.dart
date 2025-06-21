@@ -4,9 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 
-class ForgetPasswordAppBar extends StatelessWidget
+class SimpleAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const ForgetPasswordAppBar({super.key});
+  const SimpleAppBar({super.key, required this.title});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class ForgetPasswordAppBar extends StatelessWidget
           Navigator.of(context).pop();
         },
         child: Text(
-          "Back",
+         title,
           style: TextStyle(
             fontSize: 20.sp,
             color: ColorManager.kPrimaryColor,
