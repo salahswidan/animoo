@@ -8,7 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     this.hintText,
-    this.borderRadius = 12,
+    this.borderRadius = 10,
     this.suffixIcon,
     this.obscureText,
     this.validator,
