@@ -1,13 +1,12 @@
 import 'package:animoo/core/widgets/app_bar/simple_app_bar.dart';
+import 'package:animoo/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/routes_manager.dart';
 import '../../../core/widgets/bottons/app_button.dart';
-import '../../signup/widgets/custom_text_field_with_title.dart';
+import '../../../core/widgets/verfication/aoo_otp_verification_text_field.dart';
 
 class OtpVerficationCodePage extends StatelessWidget {
   const OtpVerficationCodePage({super.key});
@@ -48,19 +47,12 @@ class OtpVerficationCodePage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 41.h),
-                OtpTextField(
-                  numberOfFields: 5,
-                  margin: EdgeInsets.only(right: 8.w),
-                  borderColor: Colors.grey[900]!,
-                  showFieldAsBox: true,
-                  fieldWidth: 54.w,
-                  fieldHeight: 53.h,
-                  filled: true,
-                  borderRadius: BorderRadius.circular(10.r),
-                  enabledBorderColor: ColorManager.kPrimaryColor,
-                  focusedBorderColor: ColorManager.kPrimaryColor,
-                  onCodeChanged: (String code) {},
-                  onSubmit: (String verificationCode) {},
+                AppOtpVerificationTextField(
+                  onCompleted: (value) {
+                    Navigator.of(
+                      context,
+                    ).pushNamed(RoutesName.createNewPasswordPage);
+                  },
                 ),
 
                 SizedBox(height: 41.h),
@@ -68,7 +60,7 @@ class OtpVerficationCodePage extends StatelessWidget {
                   onTap: () {
                     Navigator.of(
                       context,
-                    ).pushNamed(RoutesName.otpVerficationCodePage);
+                    ).pushNamed(RoutesName.createNewPasswordPage);
                   },
                   text: "Confirm",
                 ),

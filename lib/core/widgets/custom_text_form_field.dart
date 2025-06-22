@@ -1,7 +1,9 @@
+
+import 'dart:ui';
+
 import 'package:animoo/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../resources/assets_values_manager.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -13,7 +15,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText,
     this.validator,
     this.keyboardType,
-    required this.controller,
+     this.controller, this.textAlign, this.focusNode, this.onChanged,
   });
   final String? hintText;
   final double borderRadius;
@@ -21,11 +23,18 @@ class CustomTextFormField extends StatelessWidget {
   final bool? obscureText;
   final String? Function(String? value)? validator;
   final TextInputType? keyboardType;
-  final TextEditingController controller;
+  final TextEditingController? controller;
+  final TextAlign? textAlign;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
+
+
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
+       textAlign: TextAlign.start,
       controller: controller,
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();

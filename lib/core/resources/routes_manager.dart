@@ -1,4 +1,5 @@
 import 'package:animoo/core/widgets/unKnow_route_page.dart';
+import 'package:animoo/view/create_new_password/screens/create_new_password_page.dart';
 import 'package:animoo/view/forget_password/screen/forget_password_page.dart';
 import 'package:animoo/view/login/screen/login_page.dart';
 import 'package:animoo/view/signup/screen/sign_up_page.dart';
@@ -18,6 +19,8 @@ static  Route? onGenerateRoute(RouteSettings settings) {
         widget = ForgetPasswordPage();
       case RoutesName.otpVerficationCodePage:
         widget = OtpVerficationCodePage();
+      case RoutesName.createNewPasswordPage:
+        widget = CreateNewPasswordPage();
       default:
         widget = const UnknowRoutePage();
 
@@ -32,4 +35,5 @@ class RoutesName {
   static const String signupPage = '/signupPage';
   static const String forgetPasswordPage = '/forgetPasswordPage';
   static const String otpVerficationCodePage = '/OtpVerficationCodePage';
+  static const String createNewPasswordPage = '/createNewPasswordPage';
 }
