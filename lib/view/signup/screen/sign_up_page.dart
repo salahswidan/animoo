@@ -1,3 +1,4 @@
+import 'package:animoo/core/services/inernet_checker_service.dart';
 import 'package:animoo/view/login/widgets/title_login_page.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
 import 'package:animoo/view/signup/widgets/sign_up_form.dart';
@@ -41,6 +42,9 @@ class SignUpPage extends StatelessWidget {
 
                   App_Button(
                     onTap: () async {
+                      var result = InternetCheckerService();
+                      bool isOnline = await result();
+                      print(isOnline);
                       Dio dio = Dio();
                       try {
                         final response = await dio.post(
