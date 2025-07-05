@@ -1,6 +1,7 @@
 import 'package:animoo/view/login/widgets/title_login_page.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
 import 'package:animoo/view/signup/widgets/sign_up_form.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/widgets/app_logo_and_title_widget.dart';
@@ -38,7 +39,33 @@ class SignUpPage extends StatelessWidget {
                     onPressedAtEye: () {},
                   ),
 
-                  App_Button(onTap: () {}, text: "Sign Up"),
+                  App_Button(
+                    onTap: () async {
+                      Dio dio = Dio();
+                      try {
+                        final response = await dio.post(
+                          'http://10.0.2.2:8000/api/signup',
+                          data: {
+                            "firstName": "salah",
+                            "lastName": "swidan",
+                            "email": "ahmed122727727@gmail.com",
+                            "phone": "201553798716",
+                            "password": "12345678",
+                            "imagePath":
+                                "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/500px-PNG_Test.png",
+                          },
+                        );
+                        print(response);
+                      } catch (e) {
+                        if (e is DioException) {
+                          print(e.response?.data);
+                          print(e.message);
+                          print(e.error);
+                        }
+                      }
+                    },
+                    text: "Sign Up",
+                  ),
                 ],
               ),
             ),
