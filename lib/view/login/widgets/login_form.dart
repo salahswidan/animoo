@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
-import '../../signup/widgets/custom_text_field_with_title.dart';
+import '../../signup/widgets/custom_Required_field.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({
@@ -23,11 +23,11 @@ class LoginForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          CustomTextFieldWithTitle(
+          CustomRequiredField(
             controller: TextEditingController(),
             fieldTitle: "Email",
           ),
-          CustomTextFieldWithTitle(
+          CustomRequiredField(
             controller: TextEditingController(),
             fieldTitle: "Password",
           ),

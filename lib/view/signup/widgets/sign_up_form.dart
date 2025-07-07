@@ -1,4 +1,5 @@
-import 'package:animoo/view/signup/widgets/custom_text_field_with_title.dart';
+import 'package:animoo/core/functions/app_vaildators.dart';
+import 'package:animoo/view/signup/widgets/custom_Required_field.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -6,18 +7,35 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/widgets/custom_select_your_image_widget.dart';
+import 'coustom_required_password_field.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({
     super.key,
     required this.formKey,
-    required this.onPressedAtEye,
-    this.visible,
+    required this.onPressedAtEyePassword,
+    this.visiblePassword,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.emailController,
+    required this.passwordController,
+    required this.confirmPasswordController,
+    required this.onPressedAtEyeConfirmPassword,
+    this.visibleConfirmPassword,
+    required this.onChanged,
   });
 
   final GlobalKey<FormState> formKey;
-  final VoidCallback onPressedAtEye;
-  final bool? visible;
+  final VoidCallback onPressedAtEyePassword;
+  final VoidCallback onPressedAtEyeConfirmPassword;
+  final bool? visiblePassword;
+  final bool? visibleConfirmPassword;
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final TextEditingController confirmPasswordController;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -26,34 +44,45 @@ class SignUpForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextFieldWithTitle(
-            fieldTitle: "Frist Name",
-            controller: TextEditingController(),
+          CustomRequiredField(
+            validator: (value) {
+              return AppVaildators.nameValidator(value);
+            },
+            fieldTitle: "First Name",
+            controller: firstNameController,
           ),
-          CustomTextFieldWithTitle(
+          CustomRequiredField(
+            validator: (value) {
+              return AppVaildators.nameValidator(value);
+            },
             fieldTitle: "Last Name",
-            controller: TextEditingController(),
+            controller: lastNameController,
           ),
-          CustomTextFieldWithTitle(
-            fieldTitle: "Phone Number",
-            controller: TextEditingController(),
-          ),
-          CustomTextFieldWithTitle(
+
+          CustomRequiredField(
+            validator: (value) {
+              return AppVaildators.emailValidator(value);
+            },
             fieldTitle: "Email",
-            controller: TextEditingController(),
+            controller: emailController,
           ),
-          CustomTextFieldWithTitle(
-            controller: TextEditingController(),
+          CoustomRequiredPasswordField(
+            onChanged: onChanged,
+            usedValidate: true,
+            controller: passwordController,
             fieldTitle: "Password",
-            onPressedAtEye: onPressedAtEye,
-            visible: visible,
+            onPressedAtEye: onPressedAtEyePassword,
+            visible: visiblePassword,
           ),
           RequiredRulesForPassword(),
-          CustomTextFieldWithTitle(
-            controller: TextEditingController(),
+          CustomRequiredField(
+            validator: (value) {
+              return AppVaildators.passwordValidator(value);
+            },
+            controller: confirmPasswordController,
             fieldTitle: "Confirm Password",
-            onPressedAtEye: onPressedAtEye,
-            visible: visible,
+            onPressedAtEye: onPressedAtEyeConfirmPassword,
+            visible: visibleConfirmPassword,
           ),
           Text(
             "Upload your profile image",

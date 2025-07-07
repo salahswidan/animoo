@@ -1,3 +1,4 @@
+import 'package:animoo/controller/sign_up_controller.dart';
 import 'package:animoo/core/services/inernet_checker_service.dart';
 import 'package:animoo/view/login/widgets/title_login_page.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
@@ -9,8 +10,30 @@ import '../../../core/widgets/app_logo_and_title_widget.dart';
 import '../../../core/widgets/bottons/app_button.dart';
 import '../../login/widgets/bottom_nav_bar_login_page.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  late SignUpController signUpController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    signUpController = SignUpController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    signUpController.disposeControllers();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,38 +58,81 @@ class SignUpPage extends StatelessWidget {
                   TitlePage(title: "Sign Up"),
 
                   SignUpForm(
-                    formKey: GlobalKey(),
-                    visible: false,
-                    onPressedAtEye: () {},
+                 
+                    onChanged: (value) {
+                      if (value.length < 12) {
+                        print("Minimum password length is 12 characters");
+                      }
+                      if (!value.contains(RegExp(r"A-Z"))) {
+                        print(
+                          "Password must contain at least one uppercase letter",
+                        );
+                      }
+                      if (!value.contains(RegExp(r"a-z"))) {
+                        print(
+                          "Password must contain at least one lowercase letter",
+                        );
+                      }
+                      if (!value.contains(RegExp(r"[0-9]"))) {
+                        print("Password must contain at least one number");
+                      }
+                      if (!value.contains(RegExp(r"[!@#\$&*~]"))) {
+                        print(
+                          "Password must contain at least one special character",
+                        );
+                      }
+                    //   //   print(value);
+                    //   // signUpController.passwordController.text = value;
+                    //   // print(signUpController.passwordController.text);
+                    },
+                    firstNameController: signUpController.firstNameController,
+                    lastNameController: signUpController.lastNameController,
+                    emailController: signUpController.emailController,
+                    passwordController: signUpController.passwordController,
+                    confirmPasswordController:
+                        signUpController.confirmPasswordController,
+                    formKey: signUpController.formKey,
+                    visiblePassword: signUpController.visiblePassword,
+                    visibleConfirmPassword:
+                        signUpController.visibleConfirmPassword,
+                    onPressedAtEyePassword: () {},
+                    onPressedAtEyeConfirmPassword: () {},
                   ),
 
                   App_Button(
                     onTap: () async {
-                      var result = InternetCheckerService();
-                      bool isOnline = await result();
-                      print(isOnline);
-                      Dio dio = Dio();
-                      try {
-                        final response = await dio.post(
-                          'http://10.0.2.2:8000/api/signup',
-                          data: {
-                            "firstName": "salah",
-                            "lastName": "swidan",
-                            "email": "ahmed122727727@gmail.com",
-                            "phone": "201553798716",
-                            "password": "12345678",
-                            "imagePath":
-                                "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/500px-PNG_Test.png",
-                          },
-                        );
-                        print(response);
-                      } catch (e) {
-                        if (e is DioException) {
-                          print(e.response?.data);
-                          print(e.message);
-                          print(e.error);
-                        }
+                      if (signUpController.formKey.currentState!.validate()) {
+                        // Perform sign-up logic here
+                        print("Form is valid");
+                        // You can call your API or perform any action here
+                      } else {
+                        print("Form is invalid");
                       }
+                      // var result = InternetCheckerService();
+                      // bool isOnline = await result();
+                      // print(isOnline);
+                      // Dio dio = Dio();
+                      // try {
+                      //   final response = await dio.post(
+                      //     'http://10.0.2.2:8000/api/signup',
+                      //     data: {
+                      //       "firstName": "salah",
+                      //       "lastName": "swidan",
+                      //       "email": "ahmed122727727@gmail.com",
+                      //       "phone": "201553798716",
+                      //       "password": "12345678",
+                      //       "imagePath":
+                      //           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/500px-PNG_Test.png",
+                      //     },
+                      //   );
+                      //   print(response);
+                      // } catch (e) {
+                      //   if (e is DioException) {
+                      //     print(e.response?.data);
+                      //     print(e.message);
+                      //     print(e.error);
+                      //   }
+                      // }
                     },
                     text: "Sign Up",
                   ),

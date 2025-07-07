@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/widgets/app_bar/simple_app_bar.dart';
-import '../../signup/widgets/custom_text_field_with_title.dart';
+import '../../signup/widgets/custom_Required_field.dart';
 
 class ForgetPasswordPage extends StatelessWidget {
   const ForgetPasswordPage({super.key});
@@ -47,7 +47,7 @@ class ForgetPasswordPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 58.h),
-                CustomTextFieldWithTitle(
+                CustomRequiredField(
                   controller: TextEditingController(),
                   fieldTitle: "Email",
                 ),

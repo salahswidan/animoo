@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:animoo/core/resources/color_manager.dart';
@@ -15,7 +14,10 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText,
     this.validator,
     this.keyboardType,
-     this.controller, this.textAlign, this.focusNode, this.onChanged,
+    this.controller,
+    this.textAlign,
+    this.focusNode,
+    this.onChanged,
   });
   final String? hintText;
   final double borderRadius;
@@ -28,14 +30,14 @@ class CustomTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
 
-
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
       focusNode: focusNode,
-       textAlign: TextAlign.start,
+      textAlign: TextAlign.start,
       controller: controller,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       onTapOutside: (event) {
         FocusScope.of(context).unfocus();
       },
@@ -65,6 +67,7 @@ class CustomTextFormField extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius.r),
           borderSide: BorderSide(color: ColorManager.kPrimaryColor),
         ),
+    
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius.r),
           borderSide: BorderSide(color: Colors.red),

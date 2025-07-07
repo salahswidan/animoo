@@ -6,7 +6,7 @@ import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/routes_manager.dart';
 import '../../../core/widgets/bottons/app_button.dart';
-import '../../signup/widgets/custom_text_field_with_title.dart';
+import '../../signup/widgets/custom_Required_field.dart';
 import '../../signup/widgets/required_rules_for_password.dart';
 
 class CreateNewPasswordPage extends StatelessWidget {
@@ -73,14 +73,14 @@ class CreateNewPasswordForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomTextFieldWithTitle(
+        CustomRequiredField(
           controller: TextEditingController(),
           fieldTitle: "New Password",
           onPressedAtEye: onPressedAtEye,
           visible: visible,
         ),
         RequiredRulesForPassword(),
-        CustomTextFieldWithTitle(
+        CustomRequiredField(
           controller: TextEditingController(),
           fieldTitle: "Confirm Password",
           onPressedAtEye: onPressedAtEye,
