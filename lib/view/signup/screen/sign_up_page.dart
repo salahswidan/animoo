@@ -1,4 +1,5 @@
 import 'package:animoo/controller/sign_up_controller.dart';
+import 'package:animoo/core/resources/const_values.dart';
 import 'package:animoo/core/services/inernet_checker_service.dart';
 import 'package:animoo/view/login/widgets/title_login_page.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
@@ -58,32 +59,58 @@ class _SignUpPageState extends State<SignUpPage> {
                   TitlePage(title: "Sign Up"),
 
                   SignUpForm(
-                 
                     onChanged: (value) {
                       if (value.length < 12) {
-                        print("Minimum password length is 12 characters");
+                        ConstsListManager
+                                .passwordRulesRequirements[0]['valid'] =
+                            false;
+                      } else {
+                        ConstsListManager
+                                .passwordRulesRequirements[0]['valid'] =
+                            true;
                       }
-                      if (!value.contains(RegExp(r"A-Z"))) {
-                        print(
-                          "Password must contain at least one uppercase letter",
-                        );
+                      if (!value.contains(RegExp(r"[A-Z]"))) {
+                        ConstsListManager
+                                .passwordRulesRequirements[1]['valid'] =
+                            false;
+                      } else {
+                        ConstsListManager
+                                .passwordRulesRequirements[1]['valid'] =
+                            true;
                       }
-                      if (!value.contains(RegExp(r"a-z"))) {
-                        print(
-                          "Password must contain at least one lowercase letter",
-                        );
+                      if (!value.contains(RegExp(r"[a-z]"))) {
+                        ConstsListManager
+                                .passwordRulesRequirements[2]['valid'] =
+                            false;
+                      } else {
+                        ConstsListManager
+                                .passwordRulesRequirements[2]['valid'] =
+                            true;
+                      }
+
+                      if (!value.contains(RegExp(r"[!@#\$&*~]"))) {
+                        ConstsListManager
+                                .passwordRulesRequirements[3]['valid'] =
+                            false;
+                      } else {
+                        ConstsListManager
+                                .passwordRulesRequirements[3]['valid'] =
+                            true;
                       }
                       if (!value.contains(RegExp(r"[0-9]"))) {
-                        print("Password must contain at least one number");
+                        ConstsListManager
+                                .passwordRulesRequirements[4]['valid'] =
+                            false;
+                      } else {
+                        ConstsListManager
+                                .passwordRulesRequirements[4]['valid'] =
+                            true;
                       }
-                      if (!value.contains(RegExp(r"[!@#\$&*~]"))) {
-                        print(
-                          "Password must contain at least one special character",
-                        );
-                      }
-                    //   //   print(value);
-                    //   // signUpController.passwordController.text = value;
-                    //   // print(signUpController.passwordController.text);
+
+                      setState(() {});
+                      //   //   print(value);
+                      //   // signUpController.passwordController.text = value;
+                      //   // print(signUpController.passwordController.text);
                     },
                     firstNameController: signUpController.firstNameController,
                     lastNameController: signUpController.lastNameController,
