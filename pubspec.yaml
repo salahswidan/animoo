@@ -39,6 +39,7 @@ dependencies:
   flutter_otp_text_field: ^1.5.1+1
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.0
+  image_picker: ^1.1.2
   pretty_dio_logger: ^1.4.0
 
 dev_dependencies:

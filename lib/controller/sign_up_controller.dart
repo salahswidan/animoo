@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:animoo/core/functions/image_picker_service.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../core/resources/const_values.dart';
 
 class SignUpController {
   late GlobalKey<FormState> formKey;
@@ -8,16 +14,19 @@ class SignUpController {
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
 
-  bool visiblePassword = false;
+  bool visiblePassword = true;
 
-  bool visibleConfirmPassword = false;
+  bool visibleConfirmPassword = true;
+
+  File? fileImage;
 
   @override
   void initState() {
     //? init Controllers
     initControllers();
   }
- void dispose(){
+
+  void dispose() {
     //? dispose Controllers
     disposeControllers();
   }
@@ -41,5 +50,50 @@ class SignUpController {
 
   SignUpController() {
     initState();
+  }
+
+  void _changeRule(int index, bool value) {
+    ConstsListManager.passwordRulesRequirements[index]['valid'] = value;
+  }
+
+  void onChangedPassword(String value) {
+    if (value.length < 12) {
+      _changeRule(0, false);
+    } else {
+      _changeRule(0, true);
+    }
+    if (!value.contains(RegExp(r"[A-Z]"))) {
+      _changeRule(1, false);
+    } else {
+      _changeRule(1, true);
+    }
+
+    if (!value.contains(RegExp(r"[a-z]"))) {
+      _changeRule(2, false);
+    } else {
+      _changeRule(2, true);
+    }
+
+    if (!value.contains(RegExp(r"[a-z]"))) {
+      _changeRule(2, false);
+    } else {
+      _changeRule(2, true);
+    }
+    ;
+
+    if (!value.contains(RegExp(r"[!@#\$&*~]"))) {
+      _changeRule(3, false);
+    } else {
+      _changeRule(3, true);
+    }
+    if (!value.contains(RegExp(r"[0-9]"))) {
+      _changeRule(4, false);
+    } else {
+      _changeRule(4, true);
+    }
+  }
+
+  void onTapAtSelectImage() async {
+    fileImage = await ImagePickerService.pickImage(source: ImageSource.camera);
   }
 }

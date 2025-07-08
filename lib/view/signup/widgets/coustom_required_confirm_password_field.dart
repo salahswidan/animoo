@@ -5,8 +5,8 @@ import 'package:animoo/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CoustomRequiredPasswordField extends StatelessWidget {
-  const CoustomRequiredPasswordField({
+class CoustomRequiredConfirmPasswordField  extends StatelessWidget {
+  const CoustomRequiredConfirmPasswordField({
     super.key,
     required this.fieldTitle,
     this.formKey,
@@ -14,8 +14,7 @@ class CoustomRequiredPasswordField extends StatelessWidget {
     this.visible,
     required this.controller,
     this.validator,
-    this.usedValidate = true,
-    required this.onChanged,
+    this.usedValidate = true, required this.password,
   });
   final bool usedValidate;
   final String fieldTitle;
@@ -25,7 +24,8 @@ class CoustomRequiredPasswordField extends StatelessWidget {
   final bool? visible;
   final TextEditingController controller;
   final String? Function(String? value)? validator;
-  final ValueChanged<String> onChanged;
+    final String password;
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,38 +44,38 @@ class CoustomRequiredPasswordField extends StatelessWidget {
         ),
         SizedBox(height: 6.h),
         CustomTextFormField(
-          onChanged: onChanged,
+          
           controller: controller,
-        obscureText: !visible!,
-          suffixIcon: fieldTitle == "Password" || fieldTitle == "Confirm Password"
-              ? IconButton(
-                  onPressed: onPressedAtEye,
-                  icon: Icon(
-                    visible == true ? Icons.visibility : Icons.visibility_off,
-                  ),
-                )
-              : null,
-               validator:
-              usedValidate == true
-                  ? (value) {
-                      return AppVaildators.passwordValidator(value);
-                    }
+          obscureText:
+              fieldTitle == "Password" || fieldTitle == "Confirm Password"
+                  ? true
+                  : false,
+          suffixIcon:
+              fieldTitle == "Password" || fieldTitle == "Confirm Password"
+                  ? IconButton(
+                    onPressed: onPressedAtEye,
+                    icon: Icon(
+                      visible == true ? Icons.visibility : Icons.visibility_off,
+                    ),
+                  )
                   : null,
           hintText: "Enter your ${fieldTitle.toLowerCase()}",
-            keyboardType:
+          validator:
+              usedValidate == true
+                  ? (value) {
+                    return AppVaildators.confirmPasswordValidator(
+                       password,
+                       value,
+                    );
+                  }
+                  : null,
+
+          keyboardType:
               fieldTitle == "Password" || fieldTitle == "Confirm Password"
                   ? TextInputType.visiblePassword
                   : TextInputType.emailAddress,
         ),
-         
-
-                  
-                          SizedBox(height: 16.h),
-
-      
-      
-        
-        
+        SizedBox(height: 16.h),
       ],
     );
   }

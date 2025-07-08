@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:animoo/core/functions/app_vaildators.dart';
+import 'package:animoo/core/functions/image_picker_service.dart';
+import 'package:animoo/core/resources/extensions.dart';
+import 'package:animoo/view/signup/widgets/coustom_required_confirm_password_field.dart';
 import 'package:animoo/view/signup/widgets/custom_Required_field.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/widgets/custom_select_your_image_widget.dart';
@@ -23,6 +28,8 @@ class SignUpForm extends StatelessWidget {
     required this.onPressedAtEyeConfirmPassword,
     this.visibleConfirmPassword,
     required this.onChanged,
+    required this.fileImage,
+    required this.onTapAtSelectImage,
   });
 
   final GlobalKey<FormState> formKey;
@@ -36,6 +43,8 @@ class SignUpForm extends StatelessWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
   final ValueChanged<String> onChanged;
+  final File? fileImage;
+  final GestureTapCallback onTapAtSelectImage;
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +84,14 @@ class SignUpForm extends StatelessWidget {
             visible: visiblePassword,
           ),
           RequiredRulesForPassword(),
-          CustomRequiredField(
-            validator: (value) {
-              return AppVaildators.passwordValidator(value);
-            },
+          CoustomRequiredConfirmPasswordField(
+            password: passwordController.getText,
             controller: confirmPasswordController,
             fieldTitle: "Confirm Password",
             onPressedAtEye: onPressedAtEyeConfirmPassword,
             visible: visibleConfirmPassword,
           ),
+
           Text(
             "Upload your profile image",
             style: TextStyle(
@@ -94,7 +102,17 @@ class SignUpForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-          CustomSelectImageWidget(),
+          CustomSelectImageWidget(
+            onTapAtSelectImage: onTapAtSelectImage,
+            
+            // onTapAtSelectImage: () async {
+            //   final pickedFile = await ImagePickerService().pickImage();
+            //   if (pickedFile != null) {
+            //     fileImage = File(pickedFile.path);
+            //   }
+            // },
+            file: fileImage,
+          ),
           SizedBox(height: 28.h),
         ],
       ),

@@ -33,4 +33,13 @@ class AppVaildators {
     }
     return null;
   }
+  static String? confirmPasswordValidator(String? valuePassword,String ? valueConfirmPassword) {
+    if (valuePassword == null || valuePassword.isEmpty) {
+      return "Confirm Password cannot be empty";
+    }
+    if (valuePassword != valueConfirmPassword) {
+      return "Passwords do not match";
+    }
+    return null;
+  }
 }
