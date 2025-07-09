@@ -5,7 +5,7 @@ import 'package:animoo/core/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CoustomRequiredConfirmPasswordField  extends StatelessWidget {
+class CoustomRequiredConfirmPasswordField extends StatelessWidget {
   const CoustomRequiredConfirmPasswordField({
     super.key,
     required this.fieldTitle,
@@ -14,18 +14,19 @@ class CoustomRequiredConfirmPasswordField  extends StatelessWidget {
     this.visible,
     required this.controller,
     this.validator,
-    this.usedValidate = true, required this.password,
+    this.usedValidate = true,
+    required this.password,
+    this.onChanged,
   });
   final bool usedValidate;
   final String fieldTitle;
-
+  final void Function(String value)? onChanged;
   final GlobalKey<FormState>? formKey;
   final VoidCallback? onPressedAtEye;
   final bool? visible;
   final TextEditingController controller;
   final String? Function(String? value)? validator;
-    final String password;
-
+  final String password;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +45,9 @@ class CoustomRequiredConfirmPasswordField  extends StatelessWidget {
         ),
         SizedBox(height: 6.h),
         CustomTextFormField(
-          
+          onChanged: onChanged,
           controller: controller,
-          obscureText:
-              fieldTitle == "Password" || fieldTitle == "Confirm Password"
-                  ? true
-                  : false,
+          obscureText: !visible!,
           suffixIcon:
               fieldTitle == "Password" || fieldTitle == "Confirm Password"
                   ? IconButton(
@@ -64,8 +62,8 @@ class CoustomRequiredConfirmPasswordField  extends StatelessWidget {
               usedValidate == true
                   ? (value) {
                     return AppVaildators.confirmPasswordValidator(
-                       password,
-                       value,
+                      password,
+                      value,
                     );
                   }
                   : null,

@@ -27,9 +27,11 @@ class SignUpForm extends StatelessWidget {
     required this.confirmPasswordController,
     required this.onPressedAtEyeConfirmPassword,
     this.visibleConfirmPassword,
-    required this.onChanged,
+   required this.onChangedPassword,
     required this.fileImage,
-    required this.onTapAtSelectImage, required this.selectImageStatus,
+    required this.onTapAtSelectImage,
+    required this.selectImageStatus,
+    required this.onChanged,
   });
 
   final GlobalKey<FormState> formKey;
@@ -42,10 +44,11 @@ class SignUpForm extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
-  final ValueChanged<String> onChanged;
+ final ValueChanged<String> onChangedPassword;
   final File? fileImage;
   final GestureTapCallback onTapAtSelectImage;
   final SelectImageStatus selectImageStatus;
+  final void Function(String value) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +58,7 @@ class SignUpForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomRequiredField(
+            onChanged: onChanged,
             validator: (value) {
               return AppVaildators.nameValidator(value);
             },
@@ -62,6 +66,7 @@ class SignUpForm extends StatelessWidget {
             controller: firstNameController,
           ),
           CustomRequiredField(
+            onChanged: onChanged,
             validator: (value) {
               return AppVaildators.nameValidator(value);
             },
@@ -70,6 +75,7 @@ class SignUpForm extends StatelessWidget {
           ),
 
           CustomRequiredField(
+            onChanged: onChanged,
             validator: (value) {
               return AppVaildators.emailValidator(value);
             },
@@ -77,7 +83,11 @@ class SignUpForm extends StatelessWidget {
             controller: emailController,
           ),
           CoustomRequiredPasswordField(
-            onChanged: onChanged,
+                 onChanged: (value){
+              onChangedPassword(value);
+              onChanged(value);
+
+                 },
             usedValidate: true,
             controller: passwordController,
             fieldTitle: "Password",
@@ -86,6 +96,7 @@ class SignUpForm extends StatelessWidget {
           ),
           RequiredRulesForPassword(),
           CoustomRequiredConfirmPasswordField(
+            onChanged: onChanged,
             password: passwordController.getText,
             controller: confirmPasswordController,
             fieldTitle: "Confirm Password",
@@ -106,8 +117,7 @@ class SignUpForm extends StatelessWidget {
           CustomSelectImageWidget(
             selectImageStatus: selectImageStatus,
             onTapAtSelectImage: onTapAtSelectImage,
-            
-           
+
             file: fileImage,
           ),
           SizedBox(height: 28.h),

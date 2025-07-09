@@ -12,7 +12,7 @@ class CustomRequiredField extends StatelessWidget {
     this.onPressedAtEye,
     this.visible,
     required this.controller,
-    this.validator,
+    this.validator, this.onChanged,
   });
   final String fieldTitle;
 
@@ -21,6 +21,7 @@ class CustomRequiredField extends StatelessWidget {
   final bool? visible;
   final TextEditingController controller;
   final String? Function(String? value)? validator;
+  final void Function(String value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,7 @@ class CustomRequiredField extends StatelessWidget {
         ),
         SizedBox(height: 6.h),
         CustomTextFormField(
+          onChanged: onChanged,
           controller: controller,
           obscureText:
               fieldTitle == "Password" || fieldTitle == "Confirm Password"

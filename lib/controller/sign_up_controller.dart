@@ -22,6 +22,7 @@ class SignUpController {
   bool visibleConfirmPassword = true;
 
   File? fileImage;
+  bool signUpActive = false;
 
   @override
   void initState() {
@@ -113,5 +114,26 @@ class SignUpController {
         selectImageStatus == SelectImageStatus.imageSelected) {
       print("validate");
     }
+  }
+
+  void onChanged(String value) {
+     if(selectImageStatus == SelectImageStatus.normal) {
+      selectImageStatus = SelectImageStatus.noImageSelected;
+    }
+    if (formKey.currentState!.validate() && 
+        selectImageStatus == SelectImageStatus.imageSelected) {
+      signUpActive = true;
+    }else {
+      signUpActive = false;
+    }
+  }
+
+ void  onPressedAtEyePassword() {
+  visiblePassword = !visiblePassword;
+  
+ }
+
+  void onPressedAtEyeConfirmPassword() {
+  visibleConfirmPassword = !visibleConfirmPassword;
   }
 }

@@ -59,6 +59,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   TitlePage(title: "Sign Up"),
 
                   SignUpForm(
+                    onChanged: (value) {
+                      signUpController.onChanged(value);
+                      setState(() {});
+                    },
                     selectImageStatus: signUpController.selectImageStatus,
                     onTapAtSelectImage: () {
                       signUpController.onTapAtSelectImage();
@@ -66,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
 
                     fileImage: signUpController.fileImage,
-                    onChanged: (value) {
+                    onChangedPassword: (value) {
                       signUpController.onChangedPassword(value);
 
                       setState(() {});
@@ -84,42 +88,25 @@ class _SignUpPageState extends State<SignUpPage> {
                     visiblePassword: signUpController.visiblePassword,
                     visibleConfirmPassword:
                         signUpController.visibleConfirmPassword,
-                    onPressedAtEyePassword: () {},
-                    onPressedAtEyeConfirmPassword: () {},
+                    onPressedAtEyePassword: (){
+                      signUpController.onPressedAtEyePassword();
+                      setState(() {});
+                    },
+                    onPressedAtEyeConfirmPassword: () {
+                      signUpController.onPressedAtEyeConfirmPassword();
+                      setState(() {});
+                    },
                   ),
 
                   App_Button(
-                    onTap: () async {
-                      signUpController.onTapSignUp();
-                      setState(() {});
-
-                      // var result = InternetCheckerService();
-                      // bool isOnline = await result();
-                      // print(isOnline);
-                      // Dio dio = Dio();
-                      // try {
-                      //   final response = await dio.post(
-                      //     'http://10.0.2.2:8000/api/signup',
-                      //     data: {
-                      //       "firstName": "salah",
-                      //       "lastName": "swidan",
-                      //       "email": "ahmed122727727@gmail.com",
-                      //       "phone": "201553798716",
-                      //       "password": "12345678",
-                      //       "imagePath":
-                      //           "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/500px-PNG_Test.png",
-                      //     },
-                      //   );
-                      //   print(response);
-                      // } catch (e) {
-                      //   if (e is DioException) {
-                      //     print(e.response?.data);
-                      //     print(e.message);
-                      //     print(e.error);
-                      //   }
-                      // }
-                    },
                     text: "Sign Up",
+                    onTap:
+                        signUpController.signUpActive == true
+                            ? () async {
+                              signUpController.onTapSignUp();
+                              setState(() {});
+                            }
+                            : null,
                   ),
                 ],
               ),

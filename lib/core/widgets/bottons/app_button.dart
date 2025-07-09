@@ -9,7 +9,7 @@ class App_Button extends StatelessWidget {
   const App_Button({
     super.key, required this.onTap, required this.text,
   });
-    final VoidCallback onTap;
+    final void Function()? onTap;
   final String text;
 
   @override
