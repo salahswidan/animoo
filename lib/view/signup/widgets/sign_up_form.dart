@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:animoo/core/functions/app_vaildators.dart';
-import 'package:animoo/core/functions/image_picker_service.dart';
 import 'package:animoo/core/resources/extensions.dart';
 import 'package:animoo/view/signup/widgets/coustom_required_confirm_password_field.dart';
 import 'package:animoo/view/signup/widgets/custom_Required_field.dart';

@@ -1,10 +1,7 @@
 import 'package:animoo/controller/sign_up_controller.dart';
-import 'package:animoo/core/resources/const_values.dart';
-import 'package:animoo/core/services/inernet_checker_service.dart';
+
 import 'package:animoo/view/login/widgets/title_login_page.dart';
-import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
 import 'package:animoo/view/signup/widgets/sign_up_form.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/widgets/app_logo_and_title_widget.dart';
@@ -64,8 +61,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       setState(() {});
                     },
                     selectImageStatus: signUpController.selectImageStatus,
-                    onTapAtSelectImage: () {
-                      signUpController.onTapAtSelectImage();
+                    onTapAtSelectImage: () async{
+                     await  signUpController.onTapAtSelectImage(
+                        context
+                      );
                       setState(() {});
                     },
 
