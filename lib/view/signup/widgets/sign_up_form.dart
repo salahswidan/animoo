@@ -8,7 +8,7 @@ import 'package:animoo/view/signup/widgets/custom_Required_field.dart';
 import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
+import '../../../core/enums/select_image_status.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/widgets/custom_select_your_image_widget.dart';
@@ -29,7 +29,7 @@ class SignUpForm extends StatelessWidget {
     this.visibleConfirmPassword,
     required this.onChanged,
     required this.fileImage,
-    required this.onTapAtSelectImage,
+    required this.onTapAtSelectImage, required this.selectImageStatus,
   });
 
   final GlobalKey<FormState> formKey;
@@ -45,6 +45,7 @@ class SignUpForm extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final File? fileImage;
   final GestureTapCallback onTapAtSelectImage;
+  final SelectImageStatus selectImageStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -103,14 +104,10 @@ class SignUpForm extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           CustomSelectImageWidget(
+            selectImageStatus: selectImageStatus,
             onTapAtSelectImage: onTapAtSelectImage,
             
-            // onTapAtSelectImage: () async {
-            //   final pickedFile = await ImagePickerService().pickImage();
-            //   if (pickedFile != null) {
-            //     fileImage = File(pickedFile.path);
-            //   }
-            // },
+           
             file: fileImage,
           ),
           SizedBox(height: 28.h),

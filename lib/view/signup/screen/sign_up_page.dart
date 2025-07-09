@@ -59,15 +59,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   TitlePage(title: "Sign Up"),
 
                   SignUpForm(
-                    onTapAtSelectImage: (){
+                    selectImageStatus: signUpController.selectImageStatus,
+                    onTapAtSelectImage: () {
                       signUpController.onTapAtSelectImage();
                       setState(() {});
                     },
-                    
+
                     fileImage: signUpController.fileImage,
                     onChanged: (value) {
                       signUpController.onChangedPassword(value);
-                    
 
                       setState(() {});
                       //   //   print(value);
@@ -90,13 +90,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
                   App_Button(
                     onTap: () async {
-                      if (signUpController.formKey.currentState!.validate()) {
-                        // Perform sign-up logic here
-                        print("Form is valid");
-                        // You can call your API or perform any action here
-                      } else {
-                        print("Form is invalid");
-                      }
+                      signUpController.onTapSignUp();
+                      setState(() {});
+
                       // var result = InternetCheckerService();
                       // bool isOnline = await result();
                       // print(isOnline);

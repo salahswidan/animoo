@@ -46,36 +46,27 @@ class CoustomRequiredPasswordField extends StatelessWidget {
         CustomTextFormField(
           onChanged: onChanged,
           controller: controller,
-        obscureText: !visible!,
-          suffixIcon: fieldTitle == "Password" || fieldTitle == "Confirm Password"
-              ? IconButton(
-                  onPressed: onPressedAtEye,
-                  icon: Icon(
-                    visible == true ? Icons.visibility : Icons.visibility_off,
-                  ),
-                )
-              : null,
-               validator:
-              usedValidate == true
-                  ? (value) {
-                      return AppVaildators.passwordValidator(value);
-                    }
+          obscureText: !visible!,
+          suffixIcon:
+              fieldTitle == "Password" || fieldTitle == "Confirm Password"
+                  ? IconButton(
+                    onPressed: onPressedAtEye,
+                    icon: Icon(
+                      visible == true ? Icons.visibility : Icons.visibility_off,
+                    ),
+                  )
                   : null,
+          validator: (value) {
+            return AppVaildators.passwordValidator(value);
+          },
           hintText: "Enter your ${fieldTitle.toLowerCase()}",
-            keyboardType:
+          keyboardType:
               fieldTitle == "Password" || fieldTitle == "Confirm Password"
                   ? TextInputType.visiblePassword
                   : TextInputType.emailAddress,
         ),
-         
 
-                  
-                          SizedBox(height: 16.h),
-
-      
-      
-        
-        
+        SizedBox(height: 16.h),
       ],
     );
   }
