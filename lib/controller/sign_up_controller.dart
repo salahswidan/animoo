@@ -6,6 +6,7 @@ import 'package:animoo/core/functions/show_select_image_model_bottom_sheet.dart'
 import 'package:animoo/core/resources/color_manager.dart';
 import 'package:animoo/core/resources/extensions.dart';
 import 'package:animoo/core/widgets/bottons/app_button.dart';
+import 'package:animoo/data/network/auth_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -108,14 +109,13 @@ class SignUpController {
         fileImage = await ImagePickerService.pickImage(
           source: ImageSource.camera,
         );
-            Navigator.pop(context);
-
+        Navigator.pop(context);
       },
       () async {
         fileImage = await ImagePickerService.pickImage(
           source: ImageSource.gallery,
         );
-            Navigator.pop(context);
+        Navigator.pop(context);
       },
     );
 
@@ -126,13 +126,16 @@ class SignUpController {
     }
   }
 
-  void onTapSignUp() {
+  void onTapSignUp() async {
     if (selectImageStatus == SelectImageStatus.normal) {
       selectImageStatus = SelectImageStatus.noImageSelected;
     }
     if (formKey.currentState!.validate() &&
         selectImageStatus == SelectImageStatus.imageSelected) {
-      print("validate");
+      await AuthApi.signUp(
+
+        fileImage!,
+      );
     }
   }
 

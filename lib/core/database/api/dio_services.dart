@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 
 import 'api_consumer.dart';
 
-class ApiServices extends ApiConsumer {
+class DioServices extends ApiConsumer {
   Dio dio;
 
-  ApiServices(this.dio) {
+  DioServices(this.dio) {
     dio.options.baseUrl = ApiConstants.baseUrl;
   }
 
@@ -32,8 +32,8 @@ class ApiServices extends ApiConsumer {
   @override
   Future post({
     required String path,
-    required Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    required Object body,
   }) async {
     try {
       Response response = await dio.post(
@@ -41,25 +41,26 @@ class ApiServices extends ApiConsumer {
         data: body,
         queryParameters: queryParameters,
       );
+
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
-        // Request was successful
+        //?success
         return response.data;
       } else {
-        // Handle error
+        //?failure
         throw ServerException(
           data: response.data as Map<String, dynamic>,
           statusCode: response.statusCode!,
-          message: response.statusMessage!,
+          message: '',
         );
       }
     } catch (e) {
-      // TODO
+      //?exception
       await handleDioException(e);
     }
   }
 
   Future<void> handleDioException(Object e) async {
-      if (e is DioException) {
+    if (e is DioException) {
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
           throw ServerException(
@@ -100,7 +101,7 @@ class ApiServices extends ApiConsumer {
         case DioExceptionType.connectionError:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 500,
+            statusCode: e.response?.statusCode ?? 408,
             message: e.response?.statusMessage ?? 'Connection error',
           );
         case DioExceptionType.unknown:
