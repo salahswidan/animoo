@@ -1,60 +1,65 @@
 import 'dart:io';
 
 import 'package:animoo/core/enums/select_image_status.dart';
-import 'package:animoo/core/functions/image_picker_service.dart';
-import 'package:animoo/core/functions/show_select_image_model_bottom_sheet.dart';
-import 'package:animoo/core/resources/color_manager.dart';
-import 'package:animoo/core/resources/extensions.dart';
-import 'package:animoo/core/widgets/bottons/app_button.dart';
+import 'package:animoo/core/resources/extenstions.dart';
 import 'package:animoo/data/network/auth_api.dart';
+import 'package:animoo/model/auth/user_model.dart';
+import 'package:dartz/dartz.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../core/resources/const_values.dart';
+import '../core/error/failure_model.dart';
+import '../core/functions/image_picker_service.dart';
+import '../core/functions/show_select_image_model_bottom_sheet.dart';
+import '../core/resources/border_radius_manager.dart';
+import '../core/resources/conts_values.dart';
+import '../model/auth/auth_response.dart';
 
 class SignUpController {
   SelectImageStatus selectImageStatus = SelectImageStatus.normal;
+  bool signUpActive = false;
   late GlobalKey<FormState> formKey;
-  late TextEditingController firstNameController;
-  late TextEditingController lastNameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
-
-  bool visiblePassword = true;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController phoneController;
 
   bool visibleConfirmPassword = true;
+  bool visiblePassword = true;
 
   File? fileImage;
-  bool signUpActive = false;
 
-  @override
   void initState() {
-    //? init Controllers
+    //?init controllers
     initControllers();
+    //?
   }
 
   void dispose() {
-    //? dispose Controllers
     disposeControllers();
   }
 
-  void initControllers() {
+  void initControllers() async {
     formKey = GlobalKey<FormState>();
-    firstNameController = TextEditingController();
-    lastNameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    phoneController = TextEditingController();
   }
 
   void disposeControllers() {
-    firstNameController.dispose();
-    lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
   }
 
   SignUpController() {
@@ -62,39 +67,38 @@ class SignUpController {
   }
 
   void _changeRule(int index, bool value) {
-    ConstsListManager.passwordRulesRequirements[index]['valid'] = value;
+    ConstsListsManager.passwordRulesRequirements[index][ConstsValuesManager
+            .valid] =
+        value;
   }
 
-  void onChangedPassword(String value) {
+  void onChangePassword(String value) {
     passwordController.text = passwordController.getText;
+    //?check value is less than 12
     if (value.trim().length < 12) {
       _changeRule(0, false);
     } else {
       _changeRule(0, true);
     }
+    //?check value contains at least one uppercase letter
     if (!value.trim().contains(RegExp(r"[A-Z]"))) {
       _changeRule(1, false);
     } else {
       _changeRule(1, true);
     }
-
+    //?check value contains at least one lowercase letter
     if (!value.trim().contains(RegExp(r"[a-z]"))) {
       _changeRule(2, false);
     } else {
       _changeRule(2, true);
     }
-
-    if (!value.trim().contains(RegExp(r"[a-z]"))) {
-      _changeRule(2, false);
-    } else {
-      _changeRule(2, true);
-    }
-
-    if (!value.trim().contains(RegExp(r"[!@#\$&*~]"))) {
+    //?check value contains at least one special character
+    if (!value.trim().contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       _changeRule(3, false);
     } else {
       _changeRule(3, true);
     }
+    //?check value contains at least one number
     if (!value.trim().contains(RegExp(r"[0-9]"))) {
       _changeRule(4, false);
     } else {
@@ -103,48 +107,66 @@ class SignUpController {
   }
 
   Future<void> onTapAtSelectImage(BuildContext context) async {
-    await showSelectImageModalBottomSheet(
+    //?chow model bottom sheet
+    await showSelectImageModelBottomSheet(
       context,
       () async {
-        fileImage = await ImagePickerService.pickImage(
-          source: ImageSource.camera,
-        );
+        fileImage = await ImagePickerService.pickImage(ImageSource.camera);
         Navigator.pop(context);
       },
       () async {
-        fileImage = await ImagePickerService.pickImage(
-          source: ImageSource.gallery,
-        );
+        fileImage = await ImagePickerService.pickImage(ImageSource.gallery);
         Navigator.pop(context);
       },
     );
 
+    //?check if image is selected
     if (fileImage == null) {
       selectImageStatus = SelectImageStatus.noImageSelected;
     } else {
       selectImageStatus = SelectImageStatus.imageSelected;
+      checkValidate();
     }
   }
 
   void onTapSignUp() async {
+    //?check if image is selected
     if (selectImageStatus == SelectImageStatus.normal) {
       selectImageStatus = SelectImageStatus.noImageSelected;
     }
     if (formKey.currentState!.validate() &&
         selectImageStatus == SelectImageStatus.imageSelected) {
-      await AuthApi.signUp(
+      //? make api
 
-        fileImage!,
+      Either<FailureModel, AuthResponse> response = await AuthApi.signUp(
+        UserModel(
+          firstName: firstNameController.getText,
+          lastName: lastNameController.getText,
+          email: emailController.getText,
+          password: passwordController.text,
+          phone: phoneController.getText,
+          image: fileImage!,
+        ),
+      );
+      response.fold(
+        (FailureModel l) {
+          print(l.errors);
+        },
+        (AuthResponse r) {
+          print(r);
+        },
       );
     }
   }
 
-  void onChanged(String value) {
+  void checkValidate() {
+    //?check if image is selected
     if (selectImageStatus == SelectImageStatus.normal) {
       selectImageStatus = SelectImageStatus.noImageSelected;
     }
     if (formKey.currentState!.validate() &&
         selectImageStatus == SelectImageStatus.imageSelected) {
+      //? make api
       signUpActive = true;
     } else {
       signUpActive = false;
@@ -157,5 +179,6 @@ class SignUpController {
 
   void onPressedAtEyeConfirmPassword() {
     visibleConfirmPassword = !visibleConfirmPassword;
+    print(visibleConfirmPassword);
   }
 }

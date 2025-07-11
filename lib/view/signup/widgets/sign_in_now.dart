@@ -9,18 +9,20 @@ import '../../../core/resources/padding_manager.dart' show PaddingManager;
 import '../../../core/resources/width_manager.dart';
 import '../../../core/widgets/spacing/horizontal_space.dart';
 
-class BottomNavBarLoginPage extends StatelessWidget {
-  const BottomNavBarLoginPage({super.key,required this.onPressedSignUpNow});
+class SignInNow extends StatelessWidget {
+  const SignInNow({super.key,required this.onPressedSignInNow});
 
-  final void Function()? onPressedSignUpNow;
+  final void Function()? onPressedSignInNow;
 
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: PaddingManager.ph8,
-        horizontal: PaddingManager.ph18,
+      padding: EdgeInsets.only(
+        top: PaddingManager.ph8,
+        bottom: PaddingManager.ph20,
+        left: PaddingManager.pw18,
+        right: PaddingManager.pw18,
       ),
       child: RichText(
         textAlign: TextAlign.center,
@@ -31,7 +33,7 @@ class BottomNavBarLoginPage extends StatelessWidget {
           ),
           children: [
             TextSpan(
-              text: ConstsValuesManager.dontHaveAnAccount,
+              text: ConstsValuesManager.haveAnAccountAlready,
               style: TextStyle(
                 color: ColorManager.kGrey3Color,
                 fontWeight: FontWeight.w300,
@@ -39,13 +41,13 @@ class BottomNavBarLoginPage extends StatelessWidget {
             ),
             WidgetSpan(child: HorizontalSpace( WidthManager.w4)),
             TextSpan(
-              text: ConstsValuesManager.signUpNow,
+              text: ConstsValuesManager.login,
               style: TextStyle(
                 color: ColorManager.kPrimaryColor,
                 decoration: TextDecoration.underline,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()..onTap = onPressedSignUpNow,
+              recognizer: TapGestureRecognizer()..onTap = onPressedSignInNow,
             ),
           ],
         ),

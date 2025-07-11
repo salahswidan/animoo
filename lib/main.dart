@@ -1,6 +1,7 @@
-import 'package:animoo/app/animoo_app.dart';
 import 'package:flutter/material.dart';
 
-void main(){
-  runApp(const AnimooApp());
+import 'app/animooo_app.dart';
+
+void main() {
+  runApp(const AnimoooApp());
 }

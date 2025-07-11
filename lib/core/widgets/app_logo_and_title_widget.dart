@@ -1,9 +1,10 @@
-
-import 'package:animoo/core/resources/assets_values_manager.dart';
-import 'package:animoo/core/resources/color_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+
+import '../resources/assets_values_manager.dart';
+import '../resources/colors_manager.dart';
+import '../resources/conts_values.dart';
+import '../resources/fonts_size_manager.dart';
+import 'app_logo_widget.dart';
 
 class AppLogoAndTitleWidget extends StatelessWidget {
   const AppLogoAndTitleWidget({super.key});
@@ -12,15 +13,15 @@ class AppLogoAndTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-               SvgPicture.asset(AssetsValuesManager.appLogoSVG, width: 72.w),
-              Text(
-                'Animoo',
-                style: TextStyle(
-                  fontFamily: fontsManager.originalSurfer,
-                  fontSize: 12.sp,
-                  color: ColorManager.kPrimaryColor,
-                ),
-              ),
+        AppLogoWidget(),
+        Text(
+          ConstsValuesManager.animooo,
+          style: TextStyle(
+            fontFamily: FontsManager.originalSurferFontFamily,
+            fontSize: FontSizeManager.s11_44,
+            color: ColorManager.kPrimaryColor,
+          ),
+        ),
       ],
     );
   }

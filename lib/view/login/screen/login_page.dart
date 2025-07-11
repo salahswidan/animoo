@@ -1,11 +1,16 @@
-import 'package:animoo/core/resources/routes_manager.dart';
-import 'package:animoo/core/widgets/app_logo_and_title_widget.dart';
-import 'package:animoo/view/login/widgets/forget_password_login.dart';
-import 'package:animoo/view/login/widgets/login_form.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/widgets/bottons/app_button.dart';
+
+import '../../../core/resources/conts_values.dart';
+import '../../../core/resources/heights_manager.dart';
+import '../../../core/resources/padding_manager.dart';
+import '../../../core/resources/routes_manager.dart';
+import '../../../core/widgets/app_logo_and_title_widget.dart';
+import '../../../core/widgets/buttons/app_button.dart';
+import '../../../core/widgets/spacing/vertical_space.dart';
 import '../widgets/bottom_nav_bar_login_page.dart';
+import '../widgets/forget_password_login.dart';
+import '../widgets/login_form.dart';
 import '../widgets/title_login_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -14,45 +19,40 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavBarLoginPage(
-        title: "Sign Up",
-        onPressedSignUpNow: () {
-          Navigator.pushNamed(context, RoutesName.signupPage);
-        },
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18).w,
+              padding: EdgeInsets.symmetric(horizontal: PaddingManager.pw18),
               child: Column(
                 children: [
-                  SizedBox(height: 30.h),
                   AppLogoAndTitleWidget(),
-                  SizedBox(height: 9.h),
-                  TitlePage(title: "Login"),
+                  VerticalSpace(HeightsManager.h9_15),
+                  TitleLoginPage(),
 
                   LoginForm(
                     formKey: GlobalKey(),
-                    visible: false,
                     onPressedAtEye: () {},
+                    visible: true, //TODO:: add form key
                   ),
                   ForgetPasswordLogin(
-                    onPressedAtForgetPassword: () {
-                      Navigator.pushNamed(
-                        context,
-                        RoutesName.forgetPasswordPage,
-                      );
-                    },
+                    onPressedAtForgetPassword: () => Navigator.of(
+                      context,
+                    ).pushNamed(RoutesName.forgetPassword),
                   ),
-                  SizedBox(height: 31.h),
-                  App_Button(onTap: () {}, text: "Login"),
+
+                  AppButton(text: ConstsValuesManager.login, onTap: () {}),
                 ],
               ),
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavBarLoginPage(
+        onPressedSignUpNow: () {
+          Navigator.pushNamed(context, RoutesName.signupPage);
+        },
       ),
     );
   }

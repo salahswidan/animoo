@@ -1,18 +1,23 @@
-import 'package:animoo/core/database/api/api_constants.dart';
-import 'package:animoo/core/error/server_exception.dart';
+
 import 'package:dio/dio.dart';
 
+import '../../error/server_exception.dart';
+import '../../resources/conts_values.dart';
+import 'api_constants.dart';
 import 'api_consumer.dart';
 
-class DioServices extends ApiConsumer {
+class DioService extends ApiConsumer {
   Dio dio;
 
-  DioServices(this.dio) {
+  DioService(this.dio) {
     dio.options.baseUrl = ApiConstants.baseUrl;
+    //TODO.. add connection time out duration
+    //TODO.. add receiveTimeout: receiveTimeout
+    //TODO.. add sendTimeout: sendTimeout
   }
 
   @override
-  Future delete({required String path, Map<String, dynamic>? body}) {
+  Future delete({required String path, Map<String, dynamic>? queryParameters}) {
     // TODO: implement delete
     throw UnimplementedError();
   }
@@ -20,12 +25,6 @@ class DioServices extends ApiConsumer {
   @override
   Future get({required String path, Map<String, dynamic>? queryParameters}) {
     // TODO: implement get
-    throw UnimplementedError();
-  }
-
-  @override
-  Future patch({required String path, Map<String, dynamic>? body}) {
-    // TODO: implement patch
     throw UnimplementedError();
   }
 
@@ -66,57 +65,61 @@ class DioServices extends ApiConsumer {
           throw ServerException(
             data: await e.response?.data,
             statusCode: e.response!.statusCode ?? 408,
-            message: e.response!.statusMessage ?? 'Connection timed out',
+            message: ConstsValuesManager.connectionTimeout,
           );
         case DioExceptionType.sendTimeout:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 408,
-            message: e.response?.statusMessage ?? 'send timed out',
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.sendTimeOut,
           );
         case DioExceptionType.receiveTimeout:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 408,
-            message: e.response?.statusMessage ?? 'Response timed out',
-          );
-        case DioExceptionType.badResponse:
-          throw ServerException(
-            data: await e.response?.data,
-            statusCode: e.response!.statusCode!,
-            message: e.response!.statusMessage ?? 'Bad response',
-          );
-        case DioExceptionType.cancel:
-          throw ServerException(
-            data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 408,
-            message: e.response?.statusMessage ?? 'Request cancelled',
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.receiveTimeOut,
           );
         case DioExceptionType.badCertificate:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 495,
-            message: e.response?.statusMessage ?? 'Bad certificate',
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.badCertificate,
+          );
+        case DioExceptionType.badResponse:
+          throw ServerException(
+            data: await e.response?.data,
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.badResponse,
+          );
+        case DioExceptionType.cancel:
+          throw ServerException(
+            data: await e.response?.data,
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.cancel,
           );
         case DioExceptionType.connectionError:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 408,
-            message: e.response?.statusMessage ?? 'Connection error',
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.connectionError,
           );
         case DioExceptionType.unknown:
           throw ServerException(
             data: await e.response?.data,
-            statusCode: e.response?.statusCode ?? 500,
-            message: e.response?.statusMessage ?? 'Unknown error',
+            statusCode: e.response!.statusCode ?? 408,
+            message: ConstsValuesManager.unKnownError,
           );
       }
     }
   }
 
   @override
-  Future put({required String path, Map<String, dynamic>? body}) async {
-    final response = await dio.put(path, data: body);
-    return response.data;
+  Future put({
+    required String path,
+    Map<String, dynamic>? queryParameters,
+    required Map<String, dynamic> body,
+  }) {
+    // TODO: implement put
+    throw UnimplementedError();
   }
 }

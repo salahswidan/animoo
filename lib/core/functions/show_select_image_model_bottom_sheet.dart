@@ -1,60 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../resources/color_manager.dart';
-import '../widgets/bottons/app_button.dart';
+import '../resources/border_radius_manager.dart';
+import '../resources/colors_manager.dart';
+import '../resources/conts_values.dart';
+import '../resources/fonts_size_manager.dart';
+import '../resources/heights_manager.dart';
+import '../widgets/buttons/app_button.dart';
+import '../widgets/spacing/vertical_space.dart';
 
-Future<void> showSelectImageModalBottomSheet(BuildContext context, void Function() onTapAtCamera, void Function() onTapAtGallery)async {
-   await showModalBottomSheet(
-  
-      backgroundColor: Colors.transparent,
-      context: context,
-      builder: (context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            App_Button(
-              onTap: onTapAtCamera,
-              text: "Camera",
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.r),
-                topRight: Radius.circular(5.r),
-              ),
-              backgroundColor: Colors.white,
-              textColor: ColorManager.kPrimaryColor,
-              fontSize: 18.sp,
-              height: 61.h,
+Future<void> showSelectImageModelBottomSheet(
+  BuildContext context,
+  void Function() onTapAtCamera,
+  void Function() onTapAtGallery,
+) async {
+  await showModalBottomSheet(
+    backgroundColor: Colors.transparent,
+    context: context,
+    builder: (context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppButton(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(BorderRadiusManager.br5),
+              topRight: Radius.circular(BorderRadiusManager.br5),
             ),
-            Divider(color: Colors.white, height: 1.h),
-            App_Button(
-              onTap: onTapAtGallery,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5.r),
-                bottomRight: Radius.circular(5.r),
-              ),
-              text: "Gallery",
-              backgroundColor: Colors.white,
-              textColor: ColorManager.kPrimaryColor,
-              fontSize: 18.sp,
-              height: 61.h,
+            text: ConstsValuesManager.camera,
+            onTap: onTapAtCamera,
+            textColor: ColorManager.kPrimaryColor,
+            fontSize: FontSizeManager.s18,
+            backgroundColor: ColorManager.kWhiteColor,
+            height: HeightsManager.h61,
+          ),
+          Divider(thickness: 1, height: 1, color: Color(0xffD8D8D8)),
+          AppButton(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(BorderRadiusManager.br5),
+              bottomRight: Radius.circular(BorderRadiusManager.br5),
             ),
-            SizedBox(height: 10.h),
-            App_Button(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              text: "Cancel",
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5.r),
-                bottomRight: Radius.circular(5.r),
-              ),
-              backgroundColor: Colors.white,
-              textColor: ColorManager.kPrimaryColor,
-              fontSize: 18.sp,
-              height: 61.h,
-            ),
-          ],
-        );
-      },
-    );
-  }
+            text: ConstsValuesManager.gallery,
+            onTap: onTapAtGallery,
+            textColor: ColorManager.kPrimaryColor,
+            fontSize: FontSizeManager.s18,
+            backgroundColor: ColorManager.kWhiteColor,
+            height: HeightsManager.h61,
+          ),
+          VerticalSpace(HeightsManager.h10),
+          AppButton(
+            text: ConstsValuesManager.cancel,
+            onTap: () {
+              print("object");
+              Navigator.pop(context);
+              FocusScope.of(context).unfocus();
+            },
+            textColor: ColorManager.kPrimaryColor,
+            fontSize: FontSizeManager.s18,
+            backgroundColor: ColorManager.kWhiteColor,
+            height: HeightsManager.h61,
+          ),
+        ],
+      );
+    },
+  );
+}

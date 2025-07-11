@@ -1,41 +1,51 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/resources/assets_values_manager.dart';
-import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/colors_manager.dart';
+import '../../../core/resources/fonts_size_manager.dart';
+import '../../../core/resources/padding_manager.dart';
+import '../../resources/width_manager.dart';
 
-class SimpleAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
-  const SimpleAppBar({super.key, required this.title});
+class SimpleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+
+  const SimpleAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      toolbarHeight: kToolbarHeight,
+      backgroundColor: ColorManager.kWhiteColor,
       titleSpacing: 0,
-      leadingWidth: 38.w,
+      leadingWidth: WidthManager.w38,
+      leading: Padding(
+        padding: EdgeInsets.only(
+          left: PaddingManager.pw18,
+          bottom: PaddingManager.ph4,
+        ),
+        child: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            CupertinoIcons.back,
+            color: ColorManager.kPrimaryColor,
+            size: FontSizeManager.s20,
+          ),
+        ),
+      ),
       title: InkWell(
         onTap: () {
           Navigator.of(context).pop();
         },
         child: Text(
-         title,
+          title,
           style: TextStyle(
-            fontSize: 20.sp,
+            fontFamily: FontsManager.otamaEpFontFamily,
+            fontSize: FontSizeManager.s20,
             color: ColorManager.kPrimaryColor,
-            fontFamily: fontsManager.Otama,
-            fontWeight: FontWeight.w600,
           ),
-        ),
-      ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 10.0, bottom: 4),
-        child: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            ();
-          },
-          icon: Icon(Icons.arrow_back_ios_new, size: 20.sp),
         ),
       ),
     );

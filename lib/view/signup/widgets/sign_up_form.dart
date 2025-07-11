@@ -1,51 +1,62 @@
 import 'dart:io';
 
-import 'package:animoo/core/functions/app_vaildators.dart';
-import 'package:animoo/core/resources/extensions.dart';
-import 'package:animoo/view/signup/widgets/coustom_required_confirm_password_field.dart';
-import 'package:animoo/view/signup/widgets/custom_Required_field.dart';
-import 'package:animoo/view/signup/widgets/required_rules_for_password.dart';
+
+import 'package:animoo/core/resources/extenstions.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../../../core/enums/select_image_status.dart';
+import '../../../core/functions/app_validators.dart';
 import '../../../core/resources/assets_values_manager.dart';
-import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/colors_manager.dart';
+import '../../../core/resources/conts_values.dart';
+import '../../../core/resources/fonts_size_manager.dart';
+import '../../../core/resources/heights_manager.dart';
+import '../../../core/widgets/custom_required_confirm_password_field.dart';
+import '../../../core/widgets/custom_required_field.dart';
+import '../../../core/widgets/custom_required_password_field.dart';
 import '../../../core/widgets/custom_select_your_image_widget.dart';
-import 'coustom_required_password_field.dart';
+import '../../../core/widgets/spacing/vertical_space.dart';
+import 'required_rules_for_password_sign_up_page.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({
     super.key,
     required this.formKey,
     required this.onPressedAtEyePassword,
-    this.visiblePassword,
+    required this.visiblePassword,
     required this.firstNameController,
     required this.lastNameController,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
-    required this.onPressedAtEyeConfirmPassword,
-    this.visibleConfirmPassword,
-   required this.onChangedPassword,
+    this.onPressedAtEyeConfirmPassword,
+    required this.visibleConfirmPassword,
+    required this.onChangedPassword,
     required this.fileImage,
     required this.onTapAtSelectImage,
     required this.selectImageStatus,
+    required this.phoneController,
     required this.onChanged,
   });
 
   final GlobalKey<FormState> formKey;
-  final VoidCallback onPressedAtEyePassword;
-  final VoidCallback onPressedAtEyeConfirmPassword;
-  final bool? visiblePassword;
-  final bool? visibleConfirmPassword;
+  final VoidCallback? onPressedAtEyePassword;
+  final File? fileImage;
+  final bool visiblePassword;
+  final bool visibleConfirmPassword;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController emailController;
+  final TextEditingController phoneController;
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
- final ValueChanged<String> onChangedPassword;
-  final File? fileImage;
+  final VoidCallback? onPressedAtEyeConfirmPassword;
+  final ValueChanged<String> onChangedPassword;
   final GestureTapCallback onTapAtSelectImage;
+
   final SelectImageStatus selectImageStatus;
   final void Function(String value) onChanged;
 
@@ -57,69 +68,90 @@ class SignUpForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomRequiredField(
+            keyboardType: TextInputType.name,
             onChanged: onChanged,
             validator: (value) {
-              return AppVaildators.nameValidator(value);
+              return AppValidators.firstNameValidator(value);
             },
-            fieldTitle: "First Name",
             controller: firstNameController,
+            title: ConstsValuesManager.firstName,
+            hintText: ConstsValuesManager.enterYourFirstName,
           ),
+          VerticalSpace(HeightsManager.h16),
           CustomRequiredField(
+            keyboardType: TextInputType.name,
             onChanged: onChanged,
             validator: (value) {
-              return AppVaildators.nameValidator(value);
+              return AppValidators.lastNameValidator(value);
             },
-            fieldTitle: "Last Name",
             controller: lastNameController,
+            title: ConstsValuesManager.lastName,
+            hintText: ConstsValuesManager.enterYourLastName,
           ),
-
+          VerticalSpace(HeightsManager.h16),
+          CustomRequiredField(
+            keyboardType: TextInputType.emailAddress,
+            onChanged: onChanged,
+            controller: emailController,
+            title: ConstsValuesManager.email,
+            hintText: ConstsValuesManager.enterYourEmailAddress,
+            validator: (value) {
+              return AppValidators.emailValidator(value);
+            },
+          ),
+          VerticalSpace(HeightsManager.h16),
           CustomRequiredField(
             onChanged: onChanged,
+            keyboardType: TextInputType.phone,
+            controller: phoneController,
+            title: ConstsValuesManager.phone,
+            hintText: ConstsValuesManager.enterYourPhone,
             validator: (value) {
-              return AppVaildators.emailValidator(value);
+              return AppValidators.phoneValidator(value);
             },
-            fieldTitle: "Email",
-            controller: emailController,
           ),
-          CoustomRequiredPasswordField(
-                 onChanged: (value){
+          VerticalSpace(HeightsManager.h16),
+          CustomRequiredPasswordField(
+            usedValidate: false,
+            onChanged: (value) {
               onChangedPassword(value);
               onChanged(value);
-
-                 },
-            usedValidate: true,
+            },
             controller: passwordController,
-            fieldTitle: "Password",
             onPressedAtEye: onPressedAtEyePassword,
+            title: ConstsValuesManager.password,
+            hintText: ConstsValuesManager.enterYourPassword,
             visible: visiblePassword,
           ),
-          RequiredRulesForPassword(),
-          CoustomRequiredConfirmPasswordField(
+
+          VerticalSpace(HeightsManager.h8),
+
+          RequiredRulesForPasswordSignUpPage(),
+          CustomRequiredConfirmPasswordField(
             onChanged: onChanged,
-            password: passwordController.getText,
-            controller: confirmPasswordController,
-            fieldTitle: "Confirm Password",
             onPressedAtEye: onPressedAtEyeConfirmPassword,
             visible: visibleConfirmPassword,
+            controller: confirmPasswordController,
+            password: passwordController.getText,
           ),
+          VerticalSpace(HeightsManager.h16),
 
           Text(
-            "Upload your profile image",
+            ConstsValuesManager.uploadImageForYourProfile,
             style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: FontSizeManager.s16,
               color: ColorManager.kGreyColor,
-              fontFamily: fontsManager.Poppins,
+              fontFamily: FontsManager.poppinsFontFamily,
               fontWeight: FontWeight.w400,
             ),
           ),
-          SizedBox(height: 8.h),
+          VerticalSpace(HeightsManager.h8),
           CustomSelectImageWidget(
-            selectImageStatus: selectImageStatus,
-            onTapAtSelectImage: onTapAtSelectImage,
-
             file: fileImage,
+            onTapAtSelectImage: onTapAtSelectImage,
+            selectImageStatus: selectImageStatus,
           ),
-          SizedBox(height: 28.h),
+          VerticalSpace(HeightsManager.h28),
         ],
       ),
     );

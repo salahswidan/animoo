@@ -1,11 +1,18 @@
 import 'dart:io';
 
-import 'package:animoo/core/enums/select_image_status.dart';
-import 'package:animoo/core/resources/color_manager.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../enums/select_image_status.dart';
 import '../resources/assets_values_manager.dart';
+import '../resources/border_radius_manager.dart';
+import '../resources/colors_manager.dart';
+import '../resources/conts_values.dart';
+import '../resources/fonts_size_manager.dart';
+import '../resources/heights_manager.dart';
+import '../resources/padding_manager.dart';
+import 'spacing/vertical_space.dart';
 
 class CustomSelectImageWidget extends StatelessWidget {
   const CustomSelectImageWidget({
@@ -14,18 +21,18 @@ class CustomSelectImageWidget extends StatelessWidget {
     required this.onTapAtSelectImage,
     required this.selectImageStatus,
   });
+
   final File? file;
-  final GestureTapCallback onTapAtSelectImage;
   final SelectImageStatus selectImageStatus;
+  final GestureTapCallback onTapAtSelectImage;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTapAtSelectImage,
-      child:
-          file == null
-              ? noFoundImage(selectImageStatus: selectImageStatus)
-              : FoundImage(file: file!, selectImageStatus: selectImageStatus),
+      child: file == null
+          ? NotFoundImage(selectImageStatus: selectImageStatus)
+          : FoundImage(file: file!, selectImageStatus: selectImageStatus),
     );
   }
 }
@@ -36,6 +43,7 @@ class FoundImage extends StatelessWidget {
     required this.file,
     required this.selectImageStatus,
   });
+
   final File file;
   final SelectImageStatus selectImageStatus;
 
@@ -45,27 +53,32 @@ class FoundImage extends StatelessWidget {
       width: double.infinity,
       child: DottedBorder(
         options: RoundedRectDottedBorderOptions(
-          // padding: EdgeInsets.symmetric(vertical: 67.w, horizontal: 20.h),
-          radius: Radius.circular(10.r),
-          color:
-              selectImageStatus == SelectImageStatus.normal
-                  ? ColorManager.kPrimaryColor
-                  : selectImageStatus == SelectImageStatus.noImageSelected
-                  ? Colors.red
-                  : Colors.green,
+          // padding: EdgeInsets.symmetric(
+          //   vertical: PaddingManager.ph4,
+          //   horizontal: PaddingManager.pw4,
+          // ),
+          radius: Radius.circular(BorderRadiusManager.br10),
+          color: selectImageStatus == SelectImageStatus.normal
+              ? ColorManager.kPrimaryColor
+              : selectImageStatus == SelectImageStatus.noImageSelected
+              ? ColorManager.kRedColor
+              : ColorManager.kGreenColor,
         ),
-
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(10.r),
-          child: SizedBox(width: double.infinity, child: Image.file(file)),
+          borderRadius: BorderRadius.circular(BorderRadiusManager.br10),
+          child: SizedBox(
+            width: double.infinity,
+            child: Image.file(file),
+          ),
         ),
       ),
     );
   }
 }
 
-class noFoundImage extends StatelessWidget {
-  const noFoundImage({super.key, required this.selectImageStatus});
+class NotFoundImage extends StatelessWidget {
+  const NotFoundImage({super.key, required this.selectImageStatus});
+
   final SelectImageStatus selectImageStatus;
 
   @override
@@ -74,47 +87,43 @@ class noFoundImage extends StatelessWidget {
       width: double.infinity,
       child: DottedBorder(
         options: RoundedRectDottedBorderOptions(
-          padding: EdgeInsets.symmetric(vertical: 67.w, horizontal: 20.h),
-          radius: Radius.circular(10.r),
-          color:
-              selectImageStatus == SelectImageStatus.normal
-                  ? ColorManager.kPrimaryColor
-                  : selectImageStatus == SelectImageStatus.noImageSelected
-                  ? Colors.red
-                  : Colors.green,
+          padding: EdgeInsets.symmetric(
+            vertical: PaddingManager.ph67,
+            horizontal: PaddingManager.pw20,
+          ),
+          radius: Radius.circular(BorderRadiusManager.br10),
+          color: selectImageStatus == SelectImageStatus.normal
+              ? ColorManager.kPrimaryColor
+              : selectImageStatus == SelectImageStatus.noImageSelected
+              ? ColorManager.kRedColor
+              : ColorManager.kGreenColor,
         ),
-
         child: SizedBox(
-          height: 100.h,
-
+          height: HeightsManager.h100,
           width: double.infinity,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.image,
-                color:
-                    selectImageStatus == SelectImageStatus.normal
-                        ? ColorManager.kPrimaryColor
-                        : selectImageStatus == SelectImageStatus.noImageSelected
-                        ? Colors.red
-                        : Colors.green,
-                size: 28.sp,
+                color: selectImageStatus == SelectImageStatus.normal
+                    ? ColorManager.kPrimaryColor
+                    : selectImageStatus == SelectImageStatus.noImageSelected
+                    ? ColorManager.kRedColor
+                    : ColorManager.kGreenColor,
+                size: FontSizeManager.s28,
               ),
-              SizedBox(height: 16.h),
+              VerticalSpace(HeightsManager.h16),
               Text(
-                "Select Your Image",
+                ConstsValuesManager.selectYourImage,
                 style: TextStyle(
-                  color:
-                      selectImageStatus == SelectImageStatus.normal
-                          ? ColorManager.kPrimaryColor
-                          : selectImageStatus ==
-                              SelectImageStatus.noImageSelected
-                          ? Colors.red
-                          : Colors.green,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: fontsManager.Poppins,
+                  color: selectImageStatus == SelectImageStatus.normal
+                      ? ColorManager.kPrimaryColor
+                      : selectImageStatus == SelectImageStatus.noImageSelected
+                      ? ColorManager.kRedColor
+                      : ColorManager.kGreenColor,
+                  fontSize: FontSizeManager.s16,
+                  fontFamily: FontsManager.poppinsFontFamily,
                 ),
               ),
             ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class UnknowRoutePage extends StatelessWidget {
-  const UnknowRoutePage({super.key});
+class UnknownRoutePage extends StatelessWidget {
+  const UnknownRoutePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +9,8 @@ class UnknowRoutePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Unknown Route'),
       ),
-      body: const Center(
-        child: Text('Unknown Route'),
+      body: Center(
+        child: Text('Route not found'),
       ),
     );
   }

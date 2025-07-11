@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 
-import 'package:animoo/core/widgets/custom_text_form_field.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../resources/colors_manager.dart';
+import '../../resources/width_manager.dart';
+import '../custom_text_form_field.dart';
+import '../spacing/horizontal_space.dart';
 
 class AppOtpVerificationTextField extends StatefulWidget {
   const AppOtpVerificationTextField({super.key, required this.onCompleted});
+
   final void Function(String value) onCompleted;
 
   @override
@@ -17,9 +20,8 @@ class _AppOtpVerificationTextFieldState
   late TextEditingController controller1;
   late TextEditingController controller2;
   late TextEditingController controller3;
-  late TextEditingController controller4; 
+  late TextEditingController controller4;
   late TextEditingController controller5;
-
   late FocusNode focusNode1;
   late FocusNode focusNode2;
   late FocusNode focusNode3;
@@ -40,7 +42,7 @@ class _AppOtpVerificationTextFieldState
     controller3 = TextEditingController();
     controller4 = TextEditingController();
     controller5 = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       FocusScope.of(context).requestFocus(focusNode1);
     });
   }
@@ -52,6 +54,7 @@ class _AppOtpVerificationTextFieldState
     focusNode3.dispose();
     focusNode4.dispose();
     focusNode5.dispose();
+
     controller1.dispose();
     controller2.dispose();
     controller3.dispose();
@@ -73,78 +76,84 @@ class _AppOtpVerificationTextFieldState
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: CustomTextFormField(
-            controller: controller1,
-            textAlign: TextAlign.center,
-            keyboardType: TextInputType.number,
-
-            focusNode: focusNode1,
             onChanged: (value) {
               goToNextFocusNode(value, focusNode2, controller1);
             },
+            controller: controller1,
+            focusNode: focusNode1,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            fillColor: ColorManager.kWhiteColor,
           ),
         ),
-        SizedBox(width: 10.w),
+        HorizontalSpace(WidthManager.w18),
         Expanded(
           child: CustomTextFormField(
-            controller: controller2,
-            keyboardType: TextInputType.number,
-
-            textAlign: TextAlign.center,
-            focusNode: focusNode2,
             onChanged: (value) {
               goToNextFocusNode(value, focusNode3, controller2);
             },
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          child: CustomTextFormField(
-            controller: controller3,
+            controller: controller2,
+            focusNode: focusNode2,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-
+            fillColor: ColorManager.kWhiteColor,
+          ),
+        ),
+        HorizontalSpace(WidthManager.w18),
+        Expanded(
+          child: CustomTextFormField(
             focusNode: focusNode3,
+            textAlign: TextAlign.center,
             onChanged: (value) {
               goToNextFocusNode(value, focusNode4, controller3);
             },
+            controller: controller3,
+            keyboardType: TextInputType.number,
+            fillColor: ColorManager.kWhiteColor,
           ),
         ),
-        SizedBox(width: 10.w),
+        HorizontalSpace(WidthManager.w18),
         Expanded(
           child: CustomTextFormField(
-            controller: controller4,
-            keyboardType: TextInputType.number,
-            textAlign: TextAlign.center,
             focusNode: focusNode4,
+            textAlign: TextAlign.center,
             onChanged: (value) {
               goToNextFocusNode(value, focusNode5, controller4);
             },
+            controller: controller4,
+            keyboardType: TextInputType.number,
+            fillColor: ColorManager.kWhiteColor,
           ),
         ),
-        SizedBox(width: 10.w),
+        HorizontalSpace(WidthManager.w18),
         Expanded(
           child: CustomTextFormField(
-            controller: controller5,
-            keyboardType: TextInputType.number,
-
-            textAlign: TextAlign.center,
-            focusNode: focusNode5,
             onChanged: (value) {
               if (value.trim().isNotEmpty) {
-                  if (value.length > 1) {
-                controller5.text = value[value.length - 1];
-              }
+                if (value.length > 1) {
+                  controller5.text = value[value.length - 1];
+                }
                 FocusScope.of(context).unfocus();
-                              widget.onCompleted(controller1.text.trim() + controller2.text.trim() + controller3.text.trim() + controller4.text.trim() + controller5.text.trim());
-
+                widget.onCompleted(
+                  controller1.text.trim() +
+                      controller2.text.trim() +
+                      controller3.text.trim() +
+                      controller4.text.trim() +
+                      controller5.text.trim(),
+                );
               }
-            
             },
+            focusNode: focusNode5,
+            controller: controller5,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            fillColor: ColorManager.kWhiteColor,
           ),
         ),
       ],

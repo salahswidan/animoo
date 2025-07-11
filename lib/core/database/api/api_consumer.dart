@@ -1,21 +1,20 @@
 abstract class ApiConsumer {
-  Future<dynamic> get({
+  Future get({
     required String path,
     Map<String, dynamic>? queryParameters,
   });
-  Future<dynamic> post({required String path,required Object body, Map<String, dynamic>? queryParameters});
-  Future<dynamic> put({
+  Future post({
     required String path,
-    Map<String, dynamic>? body,
+    Map<String, dynamic>? queryParameters,
+    required Object body,
   });
-  Future<dynamic> delete({
+  Future put({
     required String path,
-    Map<String, dynamic>? body,
+    Map<String, dynamic>? queryParameters,
+    required Map<String, dynamic> body,
   });
-  Future<dynamic> patch({
+  Future delete({
     required String path,
-    Map<String, dynamic>? body,
+    Map<String, dynamic>? queryParameters,
   });
-
-
 }

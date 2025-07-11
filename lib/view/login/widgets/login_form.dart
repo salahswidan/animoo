@@ -1,21 +1,24 @@
-import 'package:animoo/core/widgets/custom_text_form_field.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/resources/assets_values_manager.dart';
-import '../../../core/resources/color_manager.dart';
-import '../../signup/widgets/custom_Required_field.dart';
+
+import '../../../core/resources/conts_values.dart';
+import '../../../core/resources/heights_manager.dart';
+import '../../../core/widgets/custom_required_field.dart';
+import '../../../core/widgets/custom_required_password_field.dart';
+import '../../../core/widgets/spacing/vertical_space.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({
     super.key,
     required this.formKey,
     required this.onPressedAtEye,
-    this.visible,
+    required this.visible,
   });
 
   final GlobalKey<FormState> formKey;
-  final VoidCallback onPressedAtEye;
-  final bool? visible;
+  final VoidCallback? onPressedAtEye;
+  final bool visible;
 
   @override
   Widget build(BuildContext context) {
@@ -24,68 +27,28 @@ class LoginForm extends StatelessWidget {
       child: Column(
         children: [
           CustomRequiredField(
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              //TODO:: add email validation
+              if (value == null || value.trim().isEmpty) {
+                return ConstsValuesManager.enterYourEmailAddress;
+              } else {
+                return null;
+              }
+            },
             controller: TextEditingController(),
-            fieldTitle: "Email",
+            title: ConstsValuesManager.email,
+            hintText: ConstsValuesManager.enterYourEmailAddress,
           ),
-          CustomRequiredField(
-            controller: TextEditingController(),
-            fieldTitle: "Password",
-          ),
+          VerticalSpace(HeightsManager.h16),
 
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(
-          //     "Email",
-          //     style: TextStyle(
-          //       fontFamily: fontsManager.Poppins,
-          //       color: ColorManager.kGreyColor,
-          //       fontSize: 16.sp,
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(height: 6.h),
-          // CustomTextFormField(
-          //   controller: TextEditingController(),
-          //   hintText: "Enter your email",
-          //   validator: (value) {
-          //     if (value == null || value.trim().isEmpty) {
-          //       return 'Please enter your email';
-          //     }
-          //     return null;
-          //   },
-          //   keyboardType: TextInputType.emailAddress,
-          // ),
-          // SizedBox(height: 16.h),
-          // Align(
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(
-          //     "Password",
-          //     style: TextStyle(
-          //       fontFamily: fontsManager.Poppins,
-          //       color: ColorManager.kGreyColor,
-          //       fontSize: 16.sp,
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(height: 6.h),
-          // CustomTextFormField(
-          //   controller: TextEditingController(),
-          //   validator: (value) {
-          //     if (value == null || value.trim().isEmpty) {
-          //       return 'Please enter your password';
-          //     }
-          //     return null;
-          //   },
-          //   keyboardType: TextInputType.visiblePassword,
-          //   obscureText: true,
-          //   hintText: "Enter your password",
-          //   suffixIcon: IconButton(
-          //     onPressed: onPressedAtEye,
-          //     icon: Icon(
-          //       visible == true ? Icons.visibility : Icons.visibility_off,
-          //     ),
-          //   ),
-          // ),
+          CustomRequiredPasswordField(
+            title: ConstsValuesManager.password,
+            onPressedAtEye: onPressedAtEye,
+            visible: visible,
+            controller: TextEditingController(),
+            hintText: ConstsValuesManager.enterYourPassword,
+          ),
         ],
       ),
     );

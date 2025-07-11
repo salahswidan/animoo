@@ -1,12 +1,19 @@
-import 'package:animoo/controller/sign_up_controller.dart';
-
-import 'package:animoo/view/login/widgets/title_login_page.dart';
-import 'package:animoo/view/signup/widgets/sign_up_form.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../controller/sign_up_controller.dart';
+import '../../../core/resources/conts_values.dart';
+import '../../../core/resources/heights_manager.dart';
+import '../../../core/resources/padding_manager.dart';
 import '../../../core/widgets/app_logo_and_title_widget.dart';
-import '../../../core/widgets/bottons/app_button.dart';
+import '../../../core/widgets/buttons/app_button.dart';
+import '../../../core/widgets/spacing/vertical_space.dart';
 import '../../login/widgets/bottom_nav_bar_login_page.dart';
+import '../../login/widgets/title_login_page.dart';
+import '../widgets/required_rules_for_password_sign_up_page.dart';
+import '../widgets/sign_in_now.dart';
+import '../widgets/sign_up_form.dart';
+import '../widgets/sign_up_title.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -27,67 +34,34 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    signUpController.disposeControllers();
-
+    signUpController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavBarLoginPage(
-        onPressedSignUpNow: () {
-          Navigator.of(context).pop();
-        },
-        title: "Login",
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18).w,
+              padding: EdgeInsets.symmetric(horizontal: PaddingManager.pw18),
               child: Column(
                 children: [
-                  SizedBox(height: 30.h),
                   AppLogoAndTitleWidget(),
-                  SizedBox(height: 9.h),
-                  TitlePage(title: "Sign Up"),
-
+                  VerticalSpace(HeightsManager.h9_15),
+                  TitleSignUpPage(),
                   SignUpForm(
-                    onChanged: (value) {
-                      signUpController.onChanged(value);
-                      setState(() {});
-                    },
-                    selectImageStatus: signUpController.selectImageStatus,
-                    onTapAtSelectImage: () async{
-                     await  signUpController.onTapAtSelectImage(
-                        context
-                      );
-                      setState(() {});
-                    },
-
                     fileImage: signUpController.fileImage,
-                    onChangedPassword: (value) {
-                      signUpController.onChangedPassword(value);
-
-                      setState(() {});
-                      //   //   print(value);
-                      //   // signUpController.passwordController.text = value;
-                      //   // print(signUpController.passwordController.text);
-                    },
-                    firstNameController: signUpController.firstNameController,
-                    lastNameController: signUpController.lastNameController,
-                    emailController: signUpController.emailController,
-                    passwordController: signUpController.passwordController,
+                    formKey: signUpController.formKey,
                     confirmPasswordController:
                         signUpController.confirmPasswordController,
-                    formKey: signUpController.formKey,
-                    visiblePassword: signUpController.visiblePassword,
-                    visibleConfirmPassword:
-                        signUpController.visibleConfirmPassword,
-                    onPressedAtEyePassword: (){
+                    emailController: signUpController.emailController,
+                    firstNameController: signUpController.firstNameController,
+                    lastNameController: signUpController.lastNameController,
+                    passwordController: signUpController.passwordController,
+                    onPressedAtEyePassword: () {
                       signUpController.onPressedAtEyePassword();
                       setState(() {});
                     },
@@ -95,10 +69,27 @@ class _SignUpPageState extends State<SignUpPage> {
                       signUpController.onPressedAtEyeConfirmPassword();
                       setState(() {});
                     },
+                    visibleConfirmPassword:
+                        signUpController.visibleConfirmPassword,
+                    visiblePassword: signUpController.visiblePassword,
+                    onChangedPassword: (String value) {
+                      signUpController.onChangePassword(value);
+                      setState(() {});
+                    },
+                    onTapAtSelectImage: () async {
+                      await signUpController.onTapAtSelectImage(context);
+                      setState(() {});
+                    },
+                    selectImageStatus: signUpController.selectImageStatus,
+                    phoneController: signUpController.phoneController,
+                    onChanged: (String value) {
+                      signUpController.checkValidate();
+                      setState(() {});
+                    },
                   ),
 
-                  App_Button(
-                    text: "Sign Up",
+                  AppButton(
+                    text: ConstsValuesManager.signUp,
                     onTap:
                         signUpController.signUpActive == true
                             ? () async {
@@ -106,6 +97,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               setState(() {});
                             }
                             : null,
+                  ),
+                  VerticalSpace(HeightsManager.h8),
+                  SignInNow(
+                    onPressedSignInNow: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),

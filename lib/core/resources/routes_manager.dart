@@ -1,39 +1,38 @@
-import 'package:animoo/core/widgets/unKnow_route_page.dart';
-import 'package:animoo/view/create_new_password/screens/create_new_password_page.dart';
-import 'package:animoo/view/forget_password/screen/forget_password_page.dart';
-import 'package:animoo/view/login/screen/login_page.dart';
-import 'package:animoo/view/signup/screen/sign_up_page.dart';
+
 import 'package:flutter/material.dart';
 
-import '../../view/otp_verfication_code/screen/otp_verfication_code_page.dart';
+import '../../view/create_new_password/screens/create_new_password_page.dart';
+import '../../view/forget_password/screen/forget_password_page.dart';
+import '../../view/login/screen/login_page.dart';
+import '../../view/otp_verfication_code/screens/otp_verification_code_page.dart';
+import '../../view/signup/screen/sign_up_page.dart';
+import '../widgets/unknow_route_page.dart';
 
 class RoutesManager {
-static  Route? onGenerateRoute(RouteSettings settings) {
+  static Route? onGenerateRoute(RouteSettings settings) {
     Widget widget;
     switch (settings.name) {
       case RoutesName.loginPage:
         widget = LoginPage();
       case RoutesName.signupPage:
         widget = SignUpPage();
-      case RoutesName.forgetPasswordPage:
+      case RoutesName.forgetPassword:
         widget = ForgetPasswordPage();
-      case RoutesName.otpVerficationCodePage:
-        widget = OtpVerficationCodePage();
-      case RoutesName.createNewPasswordPage:
+      case RoutesName.otpVerification:
+        widget = OtpVerificationPage();
+      case RoutesName.createNewPassword:
         widget = CreateNewPasswordPage();
       default:
-        widget = const UnknowRoutePage();
-
+        widget = const UnknownRoutePage();
     }
-    return MaterialPageRoute(builder: (context) =>widget,settings: settings);
-
+    return MaterialPageRoute(builder: (context) => widget, settings: settings);
   }
 }
 
 class RoutesName {
   static const String loginPage = '/';
-  static const String signupPage = '/signupPage';
-  static const String forgetPasswordPage = '/forgetPasswordPage';
-  static const String otpVerficationCodePage = '/OtpVerficationCodePage';
-  static const String createNewPasswordPage = '/createNewPasswordPage';
+  static const String signupPage = '/signup';
+  static const String forgetPassword = '/forgetPassword';
+  static const String otpVerification = '/otpVerification';
+  static const String createNewPassword = '/createNewPassword';
 }

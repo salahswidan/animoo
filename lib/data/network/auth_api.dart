@@ -1,47 +1,48 @@
 import 'dart:io';
 
-import 'package:animoo/core/database/api/dio_services.dart';
-
+import 'package:animoo/core/error/failure_model.dart';
+import 'package:animoo/model/auth/auth_response.dart';
+import 'package:animoo/model/auth/user_model.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import '../../core/database/api/api_constants.dart';
+import '../../core/database/api/dio_service.dart';
 import '../../core/error/server_exception.dart';
 
 class AuthApi {
   AuthApi._();
 
-  static Future signUp(File image) async {
+  static Future<Either<FailureModel, AuthResponse>> signUp(
+    UserModel user,
+  ) async {
     try {
-      DioServices dioService = DioServices(
-        Dio(),
-      ); //TODO? don't forget to inject
+      DioService dioService = DioService(Dio()); //TODO? don't forget to inject
+
       var response = await dioService.post(
-        path: ApiConstants.signUpEndPoint,
+        path: ApiConstants.signUpEndpoint,
         body: FormData.fromMap({
-          "firstName": 'ahmed',
-          "lastName": 'ahmed',
-          "email": 'ahmed122727727@gmail.com',
-          "password": '12345678A!@aw2',
-          "phone": '01001398831',
-          "image": await MultipartFile.fromFile(
-            image.path,
-            filename: image.path.split("/").last,
+          ApiConstants.firstName: user.firstName,
+          ApiConstants.lastName: user.lastName,
+          ApiConstants.email: user.email,
+          ApiConstants.password: user.password,
+          ApiConstants.phone: user.phone,
+          ApiConstants.image: await MultipartFile.fromFile(
+            user.image.path,
+            filename: user.image.path.split("/").last,
           ),
           // TODO add body
         }),
       );
-      // TODO: handle response good
-      print(response);
-    } on ServerException catch (e) {
-      // TODO: handle response bad
-      print(e.message);
-      print(e.statusCode);
-      print(e.data);
-    } catch (e) {
-      // TODO: handle exception
 
-      print(e.toString());
-      print("normal exception");
+      return Right(AuthResponse.fromJson(response));
+    } on ServerException catch (e) {
+      return Left(FailureModel.fromJson(e.data));
+    } catch (e) {
+     return Left(FailureModel.fromJson({
+       'errors': [e.toString()],
+       'statusCode': '500',
+     }));
     }
   }
 }

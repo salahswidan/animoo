@@ -1,39 +1,42 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/resources/assets_values_manager.dart';
-import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/colors_manager.dart';
+import '../../../core/resources/conts_values.dart';
+import '../../../core/resources/fonts_size_manager.dart';
+import '../../../core/resources/heights_manager.dart';
+import '../../../core/widgets/spacing/vertical_space.dart';
 
 class ForgetPasswordLogin extends StatelessWidget {
   const ForgetPasswordLogin({
     super.key,
     required this.onPressedAtForgetPassword,
   });
-  final VoidCallback onPressedAtForgetPassword;
+
+  final void Function() onPressedAtForgetPassword;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 25.h,
+      height: HeightsManager.h61,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+
           Positioned(
             top: -10,
             right: 0,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: onPressedAtForgetPassword,
-                child: Text(
-                  "Forget Password?",
-                  style: TextStyle(
-                    color: ColorManager.kPrimaryColor,
-                    fontSize: 10.sp,
-                    fontFamily: fontsManager.Poppins,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                  ),
+            child: TextButton(
+              onPressed: onPressedAtForgetPassword,
+              child: Text(
+                ConstsValuesManager.forgotPassword,
+                style: TextStyle(
+                  color: ColorManager.kPrimaryColor,
+                  fontSize: FontSizeManager.s10,
+                  decoration: TextDecoration.underline,
+                  fontFamily: FontsManager.poppinsFontFamily,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
