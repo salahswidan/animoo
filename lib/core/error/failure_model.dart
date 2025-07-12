@@ -1,23 +1,21 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'failure_model.g.dart';
+
+@JsonSerializable()
 class FailureModel {
-  List<String> errors;
+  // @JsonKey(name: 'error')
+  List<String> error;
   int statusCode;
 
-  FailureModel({required this.errors, required this.statusCode});
+  FailureModel({required this.error, required this.statusCode});
 
   factory FailureModel.fromJson(Map<String, dynamic> json) {
-    return FailureModel(
-      errors:
-          json['error'] == null
-              ? []
-              : List<String>.from(json['error'].map((x) => x)),
-      statusCode: json['statusCode'],
-    );
+    print("///////////////////////////////");
+    print(json);
+    print("///////////////////////////////");
+    return FailureModel(error: [], statusCode: 500);
+    // return _$FailureModelFromJson(json);
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'errors': List<dynamic>.from(errors.map((x) => x)),
-      'statusCode': statusCode,
-    };
-  }
+  Map<String, dynamic> toJson() => _$FailureModelToJson(this);
 }

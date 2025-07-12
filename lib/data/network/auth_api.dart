@@ -35,14 +35,19 @@ class AuthApi {
         }),
       );
 
+      print(response.toString());
       return Right(AuthResponse.fromJson(response));
     } on ServerException catch (e) {
+      print(e.data.toString() + " server exception");
       return Left(FailureModel.fromJson(e.data));
     } catch (e) {
-     return Left(FailureModel.fromJson({
-       'errors': [e.toString()],
-       'statusCode': '500',
-     }));
+      print(e.toString() + " normal catch");
+      return Left(
+        FailureModel.fromJson({
+          'errors': [e.toString()],
+          'statusCode': '500',
+        }),
+      );
     }
   }
 }

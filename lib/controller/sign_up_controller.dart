@@ -1,25 +1,23 @@
 import 'dart:io';
 
+import 'package:animoo/core/enums/button_states_enum.dart';
 import 'package:animoo/core/enums/select_image_status.dart';
 import 'package:animoo/core/resources/extenstions.dart';
 import 'package:animoo/data/network/auth_api.dart';
 import 'package:animoo/model/auth/user_model.dart';
 import 'package:dartz/dartz.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../core/error/failure_model.dart';
 import '../core/functions/image_picker_service.dart';
 import '../core/functions/show_select_image_model_bottom_sheet.dart';
-import '../core/resources/border_radius_manager.dart';
 import '../core/resources/conts_values.dart';
 import '../model/auth/auth_response.dart';
 
 class SignUpController {
   SelectImageStatus selectImageStatus = SelectImageStatus.normal;
-  bool signUpActive = false;
+  ButtonStatesEnum signUpButtonStatus = ButtonStatesEnum.disabled;
   late GlobalKey<FormState> formKey;
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -129,7 +127,7 @@ class SignUpController {
     }
   }
 
-  void onTapSignUp() async {
+  Future<void> onTapSignUp() async {
     //?check if image is selected
     if (selectImageStatus == SelectImageStatus.normal) {
       selectImageStatus = SelectImageStatus.noImageSelected;
@@ -150,7 +148,7 @@ class SignUpController {
       );
       response.fold(
         (FailureModel l) {
-          print(l.errors);
+          print(l.error);
         },
         (AuthResponse r) {
           print(r);
@@ -167,9 +165,9 @@ class SignUpController {
     if (formKey.currentState!.validate() &&
         selectImageStatus == SelectImageStatus.imageSelected) {
       //? make api
-      signUpActive = true;
+      signUpButtonStatus = ButtonStatesEnum.enabled;
     } else {
-      signUpActive = false;
+      signUpButtonStatus = ButtonStatesEnum.disabled;
     }
   }
 

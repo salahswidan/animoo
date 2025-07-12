@@ -1,3 +1,5 @@
+import 'package:animoo/core/enums/button_states_enum.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../resources/assets_values_manager.dart';
@@ -16,6 +18,7 @@ class AppButton extends StatelessWidget {
     this.textColor,
     this.fontSize,
     this.borderRadius,
+    this.buttonStatus,
   });
 
   final String text;
@@ -25,11 +28,16 @@ class AppButton extends StatelessWidget {
   final double? height;
   final double? fontSize;
   final BorderRadius? borderRadius;
+  final ButtonStatesEnum? buttonStatus;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onTap,
+      onPressed:
+          buttonStatus == ButtonStatesEnum.loading ||
+                  buttonStatus == ButtonStatesEnum.disabled
+              ? null
+              : onTap,
       style: ElevatedButton.styleFrom(
         minimumSize: Size(double.infinity, height ?? HeightsManager.h44),
 
@@ -39,14 +47,21 @@ class AppButton extends StatelessWidget {
               borderRadius ?? BorderRadius.circular(BorderRadiusManager.br5),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor ?? ColorManager.kWhiteColor,
-          fontFamily: FontsManager.poppinsFontFamily,
-          fontSize: fontSize ?? FontSizeManager.s14,
-        ),
-      ),
+      child:
+          buttonStatus == ButtonStatesEnum.loading
+              ? Center(
+                child: const CupertinoActivityIndicator(
+                  color: ColorManager.kPrimaryColor,
+                ),
+              )
+              : Text(
+                text,
+                style: TextStyle(
+                  color: textColor ?? ColorManager.kWhiteColor,
+                  fontFamily: FontsManager.poppinsFontFamily,
+                  fontSize: fontSize ?? FontSizeManager.s14,
+                ),
+              ),
     );
   }
 }

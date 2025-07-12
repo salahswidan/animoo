@@ -1,40 +1,26 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'auth_response.g.dart';
+
+@JsonSerializable()
+
 class AuthResponse {
-  int? statusCode;
+  String? statusCode;
   String? message;
   String? alert;
   UserResponseModel? user;
 
   AuthResponse({this.statusCode, this.message, this.alert, this.user});
 
-  factory AuthResponse.fromJson(Map<String, dynamic> json) {
-    return AuthResponse(
-      statusCode: json['statusCode'],
-      message: json['message'],
-      alert: json['alert'],
-      user:
-          json['user'] != null
-              ? UserResponseModel.fromJson(json['user'])
-              : null,
-    );
-  }
+  factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['statusCode'] = statusCode;
-    data['message'] = message;
-    data['alert'] = alert;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$AuthResponseToJson(this);
 
   @override
   String toString() {
     return 'AuthResponse(statusCode: $statusCode, message: $message, alert: $alert, user: $user)';
   }
 }
-
+@JsonSerializable()
 class UserResponseModel {
   String? id;
   String? firstName;
@@ -54,29 +40,11 @@ class UserResponseModel {
     this.isVerified,
   });
 
-  factory UserResponseModel.fromJson(Map<String, dynamic> json) {
-    return UserResponseModel(
-      id: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      phone: json['phone'],
-      imagePath: json['imagePath'],
-      isVerified: json['isVerified'],
-    );
-  }
+  factory UserResponseModel.fromJson(Map<String, dynamic> json) => _$UserResponseModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['firstName'] = firstName;
-    data['lastName'] = lastName;
-    data['email'] = email;
-    data['phone'] = phone;
-    data['imagePath'] = imagePath;
-    data['isVerified'] = isVerified;
-    return data;
-  }
+
+  Map<String, dynamic> toJson() => _$UserResponseModelToJson(this);
+
 
   @override
   String toString() {
