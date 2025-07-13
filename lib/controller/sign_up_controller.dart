@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animoo/core/enums/button_states_enum.dart';
+import 'package:animoo/core/enums/screen_status_state.dart';
 import 'package:animoo/core/enums/select_image_status.dart';
 import 'package:animoo/core/resources/extenstions.dart';
 import 'package:animoo/data/network/auth_api.dart';
@@ -18,6 +19,7 @@ import '../model/auth/auth_response.dart';
 class SignUpController {
   SelectImageStatus selectImageStatus = SelectImageStatus.normal;
   ButtonStatesEnum signUpButtonStatus = ButtonStatesEnum.disabled;
+  ScreenStatusState screenState = ScreenStatusState.initial;
   late GlobalKey<FormState> formKey;
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -49,6 +51,14 @@ class SignUpController {
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
     phoneController = TextEditingController();
+
+    firstNameController.text = 'salah';
+    lastNameController.text = 'ahmed';
+    emailController.text = 'salahswidan@gmail.com';
+    passwordController.text = '123456qwerty!Q';
+    confirmPasswordController.text = '123456qwerty!Q';
+    phoneController.text = '01553798716';
+
   }
 
   void disposeControllers() {
