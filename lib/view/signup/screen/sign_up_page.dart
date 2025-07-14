@@ -96,7 +96,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                () async {
                              
                                 setState(() {});
-                                await signUpController.onTapSignUp();
+                                await signUpController.onTapSignUp(context);
                               
 
                               }

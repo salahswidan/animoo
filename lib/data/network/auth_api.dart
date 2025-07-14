@@ -15,13 +15,13 @@ class AuthApi {
     UserModel user,
   ) async {
     try {
-      DioService dioService = getIt<DioService>(); 
+      DioService dioService = getIt<DioService>();
 
       var response = await dioService.post(
         path: ApiConstants.signUpEndpoint,
         body: FormData.fromMap({
           ApiConstants.firstName: user.firstName,
-          ApiConstants.lastName: user.lastName,
+            ApiConstants.lastName: user.lastName,
           ApiConstants.email: user.email,
           ApiConstants.password: user.password,
           ApiConstants.phone: user.phone,
@@ -53,7 +53,7 @@ class AuthApi {
     UserModel user,
   ) async {
     try {
-      DioService dioService = getIt<DioService>(); 
+      DioService dioService = getIt<DioService>();
 
       var response = await dioService.post(
         path: ApiConstants.signUpEndpoint,

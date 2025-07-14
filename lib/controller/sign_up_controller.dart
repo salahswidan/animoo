@@ -54,12 +54,9 @@ class SignUpController {
   late Sink<List<PasswordRulesModel>> listPasswordRulesInput;
   late StreamController<List<PasswordRulesModel>> listPasswordRulesController;
 
-  late Stream<bool> loadingScreenStatusOutputStream;  
+  late Stream<bool> loadingScreenStatusOutputStream;
   late StreamController<bool> loadingScreenStatusController;
   late Sink<bool> loadingScreenStatusInput;
-
-
-  
 
   @override
   void initState() {
@@ -204,7 +201,7 @@ class SignUpController {
     }
   }
 
-  Future<void> onTapSignUp() async {
+  Future<void> onTapSignUp(BuildContext context) async {
     //?check if image is selected
     if (selectImageStatus == SelectImageStatus.normal) {
       selectImageStatus = SelectImageStatus.noImageSelected;
@@ -225,11 +222,12 @@ class SignUpController {
           image: fileImage!,
         ),
       );
-     
+
       response.fold(
         (FailureModel l) {
-                screenState = ScreenStatusState.failure;
-
+          screenState = ScreenStatusState.failure;
+          String massage = filterErrors(l.error);
+          showMySnackBar(context, massage);
           print(l.error);
         },
         (AuthResponse r) {
@@ -237,7 +235,7 @@ class SignUpController {
           print(r);
         },
       );
-       changeLoadingScreenStatus();
+      changeLoadingScreenStatus();
     }
   }
 
@@ -285,9 +283,44 @@ class SignUpController {
   void changePasswordRules() {
     listPasswordRulesInput.add(ConstsListsManager.passwordRulesRequirements);
   }
-  
+
   void changeLoadingScreenStatus() {
     loadingScreenStatusInput.add(screenState == ScreenStatusState.loading);
-  
+  }
+
+  void showMySnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  String filterErrors(List<String> error) {
+    String description = '';
+    if (error.isNotEmpty) {
+      for (var error in error) {
+        if (error.toLowerCase().trim().contains("email already")) {
+          description += 'email already exists';
+        }
+        if (error.toLowerCase().trim().contains("invalid email")) {
+          description += 'enter valid email';
+        }
+        if (error.toLowerCase().trim().contains("phone")) {
+          description += 'phone is required';
+        }
+        if (error.toLowerCase().trim().contains("password")) {
+          description += 'password is required';
+        }
+        if (error.toLowerCase().trim().contains("first name")) {
+          description += 'first name is required';
+        }
+        if (error.toLowerCase().trim().contains("last name")) {
+          description += 'last name is required';
+        }
+        if (error.toLowerCase().trim().contains("image")) {
+          description += 'image is required';
+        }
+      }
+    }
+    return description;
   }
 }
