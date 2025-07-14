@@ -21,7 +21,7 @@ class AuthApi {
         path: ApiConstants.signUpEndpoint,
         body: FormData.fromMap({
           ApiConstants.firstName: user.firstName,
-            ApiConstants.lastName: user.lastName,
+          ApiConstants.lastName: user.lastName,
           ApiConstants.email: user.email,
           ApiConstants.password: user.password,
           ApiConstants.phone: user.phone,

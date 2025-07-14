@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animoo/core/di/services/internet_checker_service.dart';
 import 'package:animoo/core/enums/button_states_enum.dart';
 import 'package:animoo/core/enums/screen_status_state.dart';
 import 'package:animoo/core/enums/select_image_status.dart';
@@ -15,6 +16,7 @@ import '../core/error/failure_model.dart';
 import '../core/functions/image_picker_service.dart';
 import '../core/functions/show_select_image_model_bottom_sheet.dart';
 import '../core/resources/conts_values.dart';
+import '../core/resources/routes_manager.dart';
 import '../model/auth/auth_response.dart';
 import '../model/auth/password_rules_model.dart';
 
@@ -210,33 +212,34 @@ class SignUpController {
         selectImageStatus == SelectImageStatus.imageSelected) {
       screenState = ScreenStatusState.loading;
       changeLoadingScreenStatus();
-      //? make api
-
-      Either<FailureModel, AuthResponse> response = await AuthApi.signUp(
-        UserModel(
-          firstName: firstNameController.getText,
-          lastName: lastNameController.getText,
-          email: emailController.getText,
-          password: passwordController.text,
-          phone: phoneController.getText,
-          image: fileImage!,
-        ),
-      );
-
-      response.fold(
-        (FailureModel l) {
-          screenState = ScreenStatusState.failure;
-          String massage = filterErrors(l.error);
-          showMySnackBar(context, massage);
-          print(l.error);
-        },
-        (AuthResponse r) {
-          screenState = ScreenStatusState.success;
-          print(r);
-        },
-      );
-      changeLoadingScreenStatus();
+      var isInternetConnected = await InternetCheckerService();
+      bool result = await isInternetConnected();
+      if (result == true) {
+        //?now make api request
+        _requestMakeNewUser(context);
+      } else {
+        _showNoInternetSnackBar(context);
+      }
     }
+  }
+
+  void _showNoInternetSnackBar(BuildContext context) {
+    screenState = ScreenStatusState.failure;
+    changeLoadingScreenStatus();
+    showMySnackBar(context, "No internet connection");
+  }
+
+  void OnSuccessResquest(AuthResponse r, BuildContext context) {
+    screenState = ScreenStatusState.success;
+    Navigator.pushNamed(context, RoutesName.otpVerificationScreen,arguments: emailController.getText);
+   
+  }
+
+  void OnFailureRequest(FailureModel l, BuildContext context) {
+    screenState = ScreenStatusState.failure;
+    String massage = filterErrors(l.error);
+    showMySnackBar(context, massage);
+    print(l.error);
   }
 
   void checkValidate() {
@@ -295,32 +298,61 @@ class SignUpController {
   }
 
   String filterErrors(List<String> error) {
-    String description = '';
+    List<String> errorList = [];
     if (error.isNotEmpty) {
-      for (var error in error) {
-        if (error.toLowerCase().trim().contains("email already")) {
-          description += 'email already exists';
+      for (var err in error) {
+        final lowerErr = err.toLowerCase().trim();
+        if (lowerErr.contains("email already")) {
+          errorList.add('email already exists');
         }
-        if (error.toLowerCase().trim().contains("invalid email")) {
-          description += 'enter valid email';
+        if (lowerErr.contains("invalid email")) {
+          errorList.add('enter valid email');
         }
-        if (error.toLowerCase().trim().contains("phone")) {
-          description += 'phone is required';
+        if (lowerErr.contains("phone")) {
+          errorList.add('phone is required');
         }
-        if (error.toLowerCase().trim().contains("password")) {
-          description += 'password is required';
+        if (lowerErr.contains("password")) {
+          errorList.add('password is required');
         }
-        if (error.toLowerCase().trim().contains("first name")) {
-          description += 'first name is required';
+        if (lowerErr.contains("first name")) {
+          errorList.add('first name is required');
         }
-        if (error.toLowerCase().trim().contains("last name")) {
-          description += 'last name is required';
+        if (lowerErr.contains("last name")) {
+          errorList.add('last name is required');
         }
-        if (error.toLowerCase().trim().contains("image")) {
-          description += 'image is required';
+        if (lowerErr.contains("image")) {
+          errorList.add('image is required');
+        }
+        if (lowerErr.contains("password must be at least")) {
+          errorList.add(
+            'password must be at least 12 characters one uppercase letter one lowercase letter one special character and one number',
+          );
         }
       }
     }
-    return description;
+    return errorList.join(" , ");
+  }
+
+  void _requestMakeNewUser(BuildContext context) async {
+    Either<FailureModel, AuthResponse> response = await AuthApi.signUp(
+      UserModel(
+        firstName: firstNameController.getText,
+        lastName: lastNameController.getText,
+        email: emailController.getText,
+        password: passwordController.text,
+        phone: phoneController.getText,
+        image: fileImage!,
+      ),
+    );
+
+    response.fold(
+      (FailureModel l) {
+        OnFailureRequest(l, context);
+      },
+      (AuthResponse r) {
+        OnSuccessResquest(r, context);
+      },
+    );
+    changeLoadingScreenStatus();
   }
 }

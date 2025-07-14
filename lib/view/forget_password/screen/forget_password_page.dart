@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,9 +24,7 @@ class ForgetPasswordPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: PaddingManager.pw18,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: PaddingManager.pw18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -42,9 +39,7 @@ class ForgetPasswordPage extends StatelessWidget {
                 ),
                 VerticalSpace(HeightsManager.h6),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: PaddingManager.pw4,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: PaddingManager.pw4),
                   child: Text(
                     style: TextStyle(
                       fontFamily: FontsManager.poppinsFontFamily,
@@ -67,7 +62,9 @@ class ForgetPasswordPage extends StatelessWidget {
                   text: ConstsValuesManager.sendCode,
                   onTap: () {
                     //?go to otp page
-                    Navigator.of(context).pushNamed(RoutesName.otpVerification);
+                    Navigator.of(
+                      context,
+                    ).pushNamed(RoutesName.otpVerificationScreen);
                   },
                 ),
               ],
