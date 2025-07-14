@@ -1,3 +1,5 @@
+import 'package:animoo/model/auth/password_rules_model.dart';
+
 class ConstsValuesManager {
   ConstsValuesManager._();
 
@@ -111,24 +113,31 @@ class ConstsValuesManager {
 }
 
 class ConstsListsManager {
-  static List<Map<String, dynamic>> passwordRulesRequirements = [
-    {
-      ConstsValuesManager.title: 'Minimum characters 12',
-      ConstsValuesManager.valid: false,
-    },
+  static List<PasswordRulesModel> passwordRulesRequirements = [
+    PasswordRulesModel(
+      
+      title: 'Minimum characters 12',
+      valid: false,
+    ),
 
-    {
-      ConstsValuesManager.title: 'One uppercase character',
-      ConstsValuesManager.valid: false,
-    },
-    {
-      ConstsValuesManager.title: 'One lowercase character',
-      ConstsValuesManager.valid: false,
-    },
-    {
-      ConstsValuesManager.title: 'One special character',
-      ConstsValuesManager.valid: false,
-    },
-    {ConstsValuesManager.title: 'One number', ConstsValuesManager.valid: false},
+    PasswordRulesModel(
+      title: 'One uppercase character',
+      valid: false,
+    ),
+    PasswordRulesModel(
+      title: 'One lowercase character',
+      valid: false,
+    ),
+    PasswordRulesModel(
+      title: 'One special character',
+      valid: false,
+    ),
+    PasswordRulesModel(
+      title: 'One number',
+      valid: false,
+    ),
+    
+  
+
   ];
 }

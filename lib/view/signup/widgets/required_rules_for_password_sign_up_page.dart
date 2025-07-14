@@ -1,4 +1,4 @@
-
+import 'package:animoo/model/auth/password_rules_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +12,31 @@ import '../../../core/widgets/spacing/horizontal_space.dart';
 import '../../../core/widgets/spacing/vertical_space.dart';
 
 class RequiredRulesForPasswordSignUpPage extends StatelessWidget {
-  const RequiredRulesForPasswordSignUpPage({super.key});
+  const RequiredRulesForPasswordSignUpPage({
+    super.key,
+    this.listPasswordRulesOutputStream,
+  });
+  final Stream<List<PasswordRulesModel>>? listPasswordRulesOutputStream;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<PasswordRulesModel>>(
+      stream: listPasswordRulesOutputStream,
+      initialData: [],
+      builder:
+          (context, snapshot) =>
+              snapshot.connectionState == ConnectionState.waiting
+                  ? WaitingWidget()
+                  : snapshot.data == null
+                  ? SizedBox()
+                  : HasDataWidget(snapshot: snapshot),
+    );
+  }
+}
+
+class HasDataWidget extends StatelessWidget {
+  const HasDataWidget({super.key, required this.snapshot});
+  final AsyncSnapshot<List<PasswordRulesModel>> snapshot;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +44,8 @@ class RequiredRulesForPasswordSignUpPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (ConstsListsManager.passwordRulesRequirements.any(
-          (element) => element['valid'] == false,
+        if (snapshot.data!.any(
+          (PasswordRulesModel element) => element.valid == false,
         ))
           TitleRules(),
         VerticalSpace(HeightsManager.h5),
@@ -29,8 +53,7 @@ class RequiredRulesForPasswordSignUpPage extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            bool isValid =
-                ConstsListsManager.passwordRulesRequirements[index][ConstsValuesManager.valid];
+            bool isValid = snapshot.data![index].valid;
             return RichText(
               text: TextSpan(
                 children: [
@@ -41,18 +64,19 @@ class RequiredRulesForPasswordSignUpPage extends StatelessWidget {
                   ),
                   WidgetSpan(child: HorizontalSpace(WidthManager.w2)),
                   TextSpan(
-                    text: ConstsListsManager
-                        .passwordRulesRequirements[index][ConstsValuesManager.title],
+                    text: snapshot.data![index].title,
                     style: TextStyle(
-                      color: isValid == true
-                          ? ColorManager.kGreenColor
-                          : ColorManager.kRedColor,
+                      color:
+                          isValid == true
+                              ? ColorManager.kGreenColor
+                              : ColorManager.kRedColor,
                       fontSize: FontSizeManager.s9,
                       fontFamily: FontsManager.poppinsFontFamily,
                       fontWeight: FontWeight.w700,
-                      decoration: isValid == true
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+                      decoration:
+                          isValid == true
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
                     ),
                   ),
                 ],
@@ -62,11 +86,20 @@ class RequiredRulesForPasswordSignUpPage extends StatelessWidget {
           separatorBuilder: (context, index) {
             return SizedBox(height: HeightsManager.h5);
           },
-          itemCount: ConstsListsManager.passwordRulesRequirements.length,
+          itemCount: snapshot.data!.length,
         ),
         VerticalSpace(HeightsManager.h16),
       ],
     );
+  }
+}
+
+class WaitingWidget extends StatelessWidget {
+  const WaitingWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: CircularProgressIndicator());
   }
 }
 

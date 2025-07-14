@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:animoo/core/enums/button_states_enum.dart';
@@ -15,8 +16,10 @@ import '../core/functions/image_picker_service.dart';
 import '../core/functions/show_select_image_model_bottom_sheet.dart';
 import '../core/resources/conts_values.dart';
 import '../model/auth/auth_response.dart';
+import '../model/auth/password_rules_model.dart';
 
 class SignUpController {
+  File? fileImage;
   SelectImageStatus selectImageStatus = SelectImageStatus.normal;
   ButtonStatesEnum signUpButtonStatus = ButtonStatesEnum.disabled;
   ScreenStatusState screenState = ScreenStatusState.initial;
@@ -31,16 +34,46 @@ class SignUpController {
   bool visibleConfirmPassword = true;
   bool visiblePassword = true;
 
-  File? fileImage;
+  late Stream<File?> fileImageOutputStream;
+  late Sink<File?> fileImageInput;
+  late StreamController<File?> fileImageController;
 
+  late Stream<bool> visiblePasswordOutputStream;
+  late Sink<bool> visiblePasswordInput;
+  late StreamController<bool> visiblePasswordController;
+
+  late Stream<bool> visibleConfirmPasswordOutputStream;
+  late Sink<bool> visibleConfirmPasswordInput;
+  late StreamController<bool> visibleConfirmPasswordController;
+
+  late Stream<ButtonStatesEnum?> signUpButtonStatusOutputStream;
+  late Sink<ButtonStatesEnum?> signUpButtonStatusInput;
+  late StreamController<ButtonStatesEnum?> signUpButtonStatusController;
+
+  late Stream<List<PasswordRulesModel>> listPasswordRulesOutputStream;
+  late Sink<List<PasswordRulesModel>> listPasswordRulesInput;
+  late StreamController<List<PasswordRulesModel>> listPasswordRulesController;
+
+  late Stream<bool> loadingScreenStatusOutputStream;  
+  late StreamController<bool> loadingScreenStatusController;
+  late Sink<bool> loadingScreenStatusInput;
+
+
+  
+
+  @override
   void initState() {
     //?init controllers
     initControllers();
-    //?
+    //?init streams
+    initStreams();
+    //?init rules
+    changePasswordRules();
   }
 
   void dispose() {
     disposeControllers();
+    disposeStreams();
   }
 
   void initControllers() async {
@@ -58,7 +91,43 @@ class SignUpController {
     passwordController.text = '123456qwerty!Q';
     confirmPasswordController.text = '123456qwerty!Q';
     phoneController.text = '01553798716';
+  }
 
+  void initStreams() {
+    fileImageController = StreamController<File?>();
+    fileImageInput = fileImageController.sink;
+    fileImageOutputStream = fileImageController.stream;
+    visiblePasswordController = StreamController<bool>();
+    visiblePasswordInput = visiblePasswordController.sink;
+    visiblePasswordOutputStream = visiblePasswordController.stream;
+    visibleConfirmPasswordController = StreamController<bool>();
+    visibleConfirmPasswordInput = visibleConfirmPasswordController.sink;
+    visibleConfirmPasswordOutputStream =
+        visibleConfirmPasswordController.stream;
+    signUpButtonStatusController = StreamController<ButtonStatesEnum?>();
+    signUpButtonStatusInput = signUpButtonStatusController.sink;
+    signUpButtonStatusOutputStream = signUpButtonStatusController.stream;
+    listPasswordRulesController = StreamController<List<PasswordRulesModel>>();
+    listPasswordRulesInput = listPasswordRulesController.sink;
+    listPasswordRulesOutputStream = listPasswordRulesController.stream;
+    loadingScreenStatusController = StreamController<bool>();
+    loadingScreenStatusInput = loadingScreenStatusController.sink;
+    loadingScreenStatusOutputStream = loadingScreenStatusController.stream;
+  }
+
+  void disposeStreams() {
+    fileImageController.close();
+    fileImageInput.close();
+    visiblePasswordController.close();
+    visiblePasswordInput.close();
+    visibleConfirmPasswordController.close();
+    visibleConfirmPasswordInput.close();
+    signUpButtonStatusController.close();
+    signUpButtonStatusInput.close();
+    listPasswordRulesController.close();
+    listPasswordRulesInput.close();
+    loadingScreenStatusController.close();
+    loadingScreenStatusInput.close();
   }
 
   void disposeControllers() {
@@ -75,9 +144,8 @@ class SignUpController {
   }
 
   void _changeRule(int index, bool value) {
-    ConstsListsManager.passwordRulesRequirements[index][ConstsValuesManager
-            .valid] =
-        value;
+    ConstsListsManager.passwordRulesRequirements[index].valid = value;
+    changePasswordRules();
   }
 
   void onChangePassword(String value) {
@@ -118,13 +186,12 @@ class SignUpController {
     //?chow model bottom sheet
     await showSelectImageModelBottomSheet(
       context,
-      () async {
-        fileImage = await ImagePickerService.pickImage(ImageSource.camera);
-        Navigator.pop(context);
+      () {
+        _onTapAtCamera(context);
       },
-      () async {
-        fileImage = await ImagePickerService.pickImage(ImageSource.gallery);
-        Navigator.pop(context);
+
+      () {
+        _onTapAtGallery(context);
       },
     );
 
@@ -144,6 +211,8 @@ class SignUpController {
     }
     if (formKey.currentState!.validate() &&
         selectImageStatus == SelectImageStatus.imageSelected) {
+      screenState = ScreenStatusState.loading;
+      changeLoadingScreenStatus();
       //? make api
 
       Either<FailureModel, AuthResponse> response = await AuthApi.signUp(
@@ -156,14 +225,19 @@ class SignUpController {
           image: fileImage!,
         ),
       );
+     
       response.fold(
         (FailureModel l) {
+                screenState = ScreenStatusState.failure;
+
           print(l.error);
         },
         (AuthResponse r) {
+          screenState = ScreenStatusState.success;
           print(r);
         },
       );
+       changeLoadingScreenStatus();
     }
   }
 
@@ -179,14 +253,41 @@ class SignUpController {
     } else {
       signUpButtonStatus = ButtonStatesEnum.disabled;
     }
+    changeSignUpButtonStatus();
+  }
+
+  void changeSignUpButtonStatus() {
+    signUpButtonStatusInput.add(signUpButtonStatus);
   }
 
   void onPressedAtEyePassword() {
     visiblePassword = !visiblePassword;
+    visiblePasswordInput.add(visiblePassword);
   }
 
   void onPressedAtEyeConfirmPassword() {
     visibleConfirmPassword = !visibleConfirmPassword;
-    print(visibleConfirmPassword);
+    visibleConfirmPasswordInput.add(visibleConfirmPassword);
+  }
+
+  void _onTapAtCamera(context) async {
+    fileImage = await ImagePickerService.pickImage(ImageSource.camera);
+    fileImageInput.add(fileImage);
+    Navigator.pop(context);
+  }
+
+  void _onTapAtGallery(BuildContext context) async {
+    fileImage = await ImagePickerService.pickImage(ImageSource.gallery);
+    fileImageInput.add(fileImage);
+    Navigator.pop(context);
+  }
+
+  void changePasswordRules() {
+    listPasswordRulesInput.add(ConstsListsManager.passwordRulesRequirements);
+  }
+  
+  void changeLoadingScreenStatus() {
+    loadingScreenStatusInput.add(screenState == ScreenStatusState.loading);
+  
   }
 }

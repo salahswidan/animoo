@@ -1,12 +1,9 @@
 import 'dart:io';
-
-
 import 'package:animoo/core/resources/extenstions.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../core/enums/select_image_status.dart';
 import '../../../core/functions/app_validators.dart';
 import '../../../core/resources/assets_values_manager.dart';
@@ -19,6 +16,7 @@ import '../../../core/widgets/custom_required_field.dart';
 import '../../../core/widgets/custom_required_password_field.dart';
 import '../../../core/widgets/custom_select_your_image_widget.dart';
 import '../../../core/widgets/spacing/vertical_space.dart';
+import '../../../model/auth/password_rules_model.dart';
 import 'required_rules_for_password_sign_up_page.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -26,27 +24,28 @@ class SignUpForm extends StatelessWidget {
     super.key,
     required this.formKey,
     required this.onPressedAtEyePassword,
-    required this.visiblePassword,
+    required this.visiblePasswordOutputStream,
     required this.firstNameController,
     required this.lastNameController,
     required this.emailController,
     required this.passwordController,
     required this.confirmPasswordController,
     this.onPressedAtEyeConfirmPassword,
-    required this.visibleConfirmPassword,
+    required this.visibleConfirmPasswordOutputStream,
     required this.onChangedPassword,
     required this.fileImage,
     required this.onTapAtSelectImage,
     required this.selectImageStatus,
     required this.phoneController,
     required this.onChanged,
+    required this.fileImageOutputData, required this.listPasswordRulesOutputStream,
   });
 
   final GlobalKey<FormState> formKey;
   final VoidCallback? onPressedAtEyePassword;
   final File? fileImage;
-  final bool visiblePassword;
-  final bool visibleConfirmPassword;
+  final Stream<bool> visiblePasswordOutputStream;
+  final  Stream<bool> visibleConfirmPasswordOutputStream;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController emailController;
@@ -59,6 +58,9 @@ class SignUpForm extends StatelessWidget {
 
   final SelectImageStatus selectImageStatus;
   final void Function(String value) onChanged;
+  final Stream<File?> fileImageOutputData;
+  final Stream<List<PasswordRulesModel>> listPasswordRulesOutputStream;
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,28 +113,41 @@ class SignUpForm extends StatelessWidget {
             },
           ),
           VerticalSpace(HeightsManager.h16),
-          CustomRequiredPasswordField(
-            usedValidate: false,
-            onChanged: (value) {
-              onChangedPassword(value);
-              onChanged(value);
-            },
-            controller: passwordController,
-            onPressedAtEye: onPressedAtEyePassword,
-            title: ConstsValuesManager.password,
-            hintText: ConstsValuesManager.enterYourPassword,
-            visible: visiblePassword,
+          StreamBuilder<bool>(
+            stream: visiblePasswordOutputStream,
+            initialData: false,
+            builder:
+                (context, snapshot) => CustomRequiredPasswordField(
+                  usedValidate: false,
+                  onChanged: (value) {
+                    onChangedPassword(value);
+                    onChanged(value);
+                  },
+                  controller: passwordController,
+                  onPressedAtEye: onPressedAtEyePassword,
+                  title: ConstsValuesManager.password,
+                  hintText: ConstsValuesManager.enterYourPassword,
+                  visible: snapshot.data ?? false,
+                ),
           ),
 
           VerticalSpace(HeightsManager.h8),
 
-          RequiredRulesForPasswordSignUpPage(),
-          CustomRequiredConfirmPasswordField(
-            onChanged: onChanged,
-            onPressedAtEye: onPressedAtEyeConfirmPassword,
-            visible: visibleConfirmPassword,
-            controller: confirmPasswordController,
-            password: passwordController.getText,
+          RequiredRulesForPasswordSignUpPage(
+            listPasswordRulesOutputStream: listPasswordRulesOutputStream,
+          ),
+          StreamBuilder<bool>(
+            stream: visibleConfirmPasswordOutputStream,
+            initialData: false,
+            builder:
+                (context, snapshot) =>
+             CustomRequiredConfirmPasswordField(
+              onChanged: onChanged,
+              onPressedAtEye: onPressedAtEyeConfirmPassword,
+              visible: snapshot.data ?? false,
+              controller: confirmPasswordController,
+              password: passwordController.getText,
+            ),
           ),
           VerticalSpace(HeightsManager.h16),
 
@@ -146,11 +161,17 @@ class SignUpForm extends StatelessWidget {
             ),
           ),
           VerticalSpace(HeightsManager.h8),
-          CustomSelectImageWidget(
-            file: fileImage,
-            onTapAtSelectImage: onTapAtSelectImage,
-            selectImageStatus: selectImageStatus,
+          StreamBuilder<File?>(
+            stream: fileImageOutputData,
+            initialData: null,
+            builder:
+                (context, snapshot) => CustomSelectImageWidget(
+                  file: snapshot.data,
+                  onTapAtSelectImage: onTapAtSelectImage,
+                  selectImageStatus: selectImageStatus,
+                ),
           ),
+
           VerticalSpace(HeightsManager.h28),
         ],
       ),

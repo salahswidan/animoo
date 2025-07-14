@@ -11,6 +11,7 @@ import '../../../core/widgets/app_Bar/simple_app_bar.dart';
 import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/custom_required_password_field.dart';
 import '../../../core/widgets/spacing/vertical_space.dart';
+import '../../../model/auth/password_rules_model.dart';
 import '../../signup/widgets/required_rules_for_password_sign_up_page.dart';
 
 class CreateNewPasswordPage extends StatelessWidget {
@@ -69,7 +70,10 @@ class CreateNewPasswordForm extends StatelessWidget {
 
         VerticalSpace(HeightsManager.h8),
 
-        RequiredRulesForPasswordSignUpPage(),
+        RequiredRulesForPasswordSignUpPage(
+        //  listPasswordRulesOutputStream: Stream<List<PasswordRulesModel>>.empty(),
+          
+        ),
         CustomRequiredPasswordField(
           onPressedAtEye: () {},
           title: ConstsValuesManager.confirmPassword,

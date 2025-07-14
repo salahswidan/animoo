@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 
 import '../../error/server_exception.dart';
@@ -11,9 +10,9 @@ class DioService extends ApiConsumer {
 
   DioService(this.dio) {
     dio.options.baseUrl = ApiConstants.baseUrl;
-    //TODO.. add connection time out duration
-    //TODO.. add receiveTimeout: receiveTimeout
-    //TODO.. add sendTimeout: sendTimeout
+    dio.options.connectTimeout = const Duration(seconds: 10);
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+    dio.options.sendTimeout = const Duration(seconds: 10);
   }
 
   @override

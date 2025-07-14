@@ -40,7 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AppModelProgressHud(
-        loading: signUpController.screenState == ScreenStatusState.loading,
+        loadingOutputStream: signUpController.loadingScreenStatusOutputStream,
 
         child: SafeArea(
           child: SingleChildScrollView(
@@ -54,6 +54,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     VerticalSpace(HeightsManager.h9_15),
                     TitleSignUpPage(),
                     SignUpForm(
+                      listPasswordRulesOutputStream: signUpController.listPasswordRulesOutputStream,
+                      fileImageOutputData:
+                          signUpController.fileImageOutputStream,
                       fileImage: signUpController.fileImage,
                       formKey: signUpController.formKey,
                       confirmPasswordController:
@@ -64,49 +67,40 @@ class _SignUpPageState extends State<SignUpPage> {
                       passwordController: signUpController.passwordController,
                       onPressedAtEyePassword: () {
                         signUpController.onPressedAtEyePassword();
-                        setState(() {});
                       },
                       onPressedAtEyeConfirmPassword: () {
                         signUpController.onPressedAtEyeConfirmPassword();
-                        setState(() {});
                       },
-                      visibleConfirmPassword:
-                          signUpController.visibleConfirmPassword,
-                      visiblePassword: signUpController.visiblePassword,
+                      visibleConfirmPasswordOutputStream:
+                          signUpController.visibleConfirmPasswordOutputStream,
+                      visiblePasswordOutputStream:
+                          signUpController.visiblePasswordOutputStream,
                       onChangedPassword: (String value) {
                         signUpController.onChangePassword(value);
-                        setState(() {});
                       },
                       onTapAtSelectImage: () async {
                         await signUpController.onTapAtSelectImage(context);
-                        setState(() {});
                       },
                       selectImageStatus: signUpController.selectImageStatus,
                       phoneController: signUpController.phoneController,
                       onChanged: (String value) {
                         signUpController.checkValidate();
-                        setState(() {});
                       },
                     ),
 
                     AppButton(
-                      buttonStatus: signUpController.signUpButtonStatus,
+                      buttonStatusOutputStream: signUpController.signUpButtonStatusOutputStream,
                       text: ConstsValuesManager.signUp,
                       onTap:
-                          signUpController.signUpButtonStatus ==
-                                  ButtonStatesEnum.enabled
-                              ? () async {
-                                signUpController.screenState =
-                                    ScreenStatusState.loading;
-
+                          
+                               () async {
+                             
                                 setState(() {});
                                 await signUpController.onTapSignUp();
-                                signUpController.screenState =
-                                    ScreenStatusState.success;
+                              
 
-                                setState(() {});
                               }
-                              : null,
+                           
                     ),
                     VerticalSpace(HeightsManager.h8),
                     SignInNow(

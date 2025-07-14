@@ -18,7 +18,7 @@ class AppButton extends StatelessWidget {
     this.textColor,
     this.fontSize,
     this.borderRadius,
-    this.buttonStatus,
+    this.buttonStatusOutputStream,
   });
 
   final String text;
@@ -28,40 +28,45 @@ class AppButton extends StatelessWidget {
   final double? height;
   final double? fontSize;
   final BorderRadius? borderRadius;
-  final ButtonStatesEnum? buttonStatus;
+  final Stream<ButtonStatesEnum?>? buttonStatusOutputStream;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed:
-          buttonStatus == ButtonStatesEnum.loading ||
-                  buttonStatus == ButtonStatesEnum.disabled
-              ? null
-              : onTap,
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(double.infinity, height ?? HeightsManager.h44),
-
-        backgroundColor: backgroundColor ?? ColorManager.kPrimaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius:
-              borderRadius ?? BorderRadius.circular(BorderRadiusManager.br5),
+    return StreamBuilder<ButtonStatesEnum?>(
+      stream: buttonStatusOutputStream,
+     
+      builder: (context, snapshot) =>
+      ElevatedButton(
+        onPressed:
+            snapshot.data == ButtonStatesEnum.loading ||
+                    snapshot.data == ButtonStatesEnum.disabled
+                ? null
+                : onTap,
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(double.infinity, height ?? HeightsManager.h44),
+      
+          backgroundColor: backgroundColor ?? ColorManager.kPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                borderRadius ?? BorderRadius.circular(BorderRadiusManager.br5),
+          ),
         ),
+        child:
+            snapshot.data == ButtonStatesEnum.loading
+                ? Center(
+                  child: const CupertinoActivityIndicator(
+                    color: ColorManager.kPrimaryColor,
+                  ),
+                )
+                : Text(
+                  text,
+                  style: TextStyle(
+                    color: textColor ?? ColorManager.kWhiteColor,
+                    fontFamily: FontsManager.poppinsFontFamily,
+                    fontSize: fontSize ?? FontSizeManager.s14,
+                  ),
+                ),
       ),
-      child:
-          buttonStatus == ButtonStatesEnum.loading
-              ? Center(
-                child: const CupertinoActivityIndicator(
-                  color: ColorManager.kPrimaryColor,
-                ),
-              )
-              : Text(
-                text,
-                style: TextStyle(
-                  color: textColor ?? ColorManager.kWhiteColor,
-                  fontFamily: FontsManager.poppinsFontFamily,
-                  fontSize: fontSize ?? FontSizeManager.s14,
-                ),
-              ),
     );
   }
 }
