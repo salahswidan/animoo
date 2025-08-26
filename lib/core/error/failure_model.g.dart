@@ -1,19 +1,18 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+// // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'failure_model.dart';
+// part of 'failure_model.dart';
 
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
+// // **************************************************************************
+// // JsonSerializableGenerator
+// // **************************************************************************
 
+// FailureModel _$FailureModelFromJson(Map<String, dynamic> json) => FailureModel(
+//   errors: (json['error'] as List<dynamic>).map((e) => e as String).toList(),
+//   statusCode: (json['statusCode'] as num).toInt(),
+// );
 
-FailureModel _$FailureModelFromJson(Map<String, dynamic> json) => FailureModel(
-  error: (json['error']as List<dynamic>).map((e) => e as String).toList(),
-  statusCode: (json['statusCode'] as num).toInt(),
-);
-
-Map<String, dynamic> _$FailureModelToJson(FailureModel instance) =>
-    <String, dynamic>{
-      'error': instance.error,
-      'statusCode': instance.statusCode,
-    };
+// Map<String, dynamic> _$FailureModelToJson(FailureModel instance) =>
+//     <String, dynamic>{
+//       'error': instance.errors,
+//       'statusCode': instance.statusCode,
+//     };

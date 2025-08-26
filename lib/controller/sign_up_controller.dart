@@ -237,9 +237,9 @@ class SignUpController {
 
   void OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
-    String massage = filterErrors(l.error);
+    String massage = filterErrors(l.errors);
     showMySnackBar(context, massage);
-    print(l.error);
+    print(l.errors);
   }
 
   void checkValidate() {

@@ -5,7 +5,7 @@ import '../../view/forget_password/screen/forget_password_page.dart';
 import '../../view/login/screen/login_page.dart';
 import '../../view/otp_verfication_code/screens/otp_verification_code_page.dart';
 import '../../view/signup/screen/sign_up_page.dart';
-import '../widgets/unknow_route_page.dart';
+import '../widgets/unKnow_route_page.dart';
 
 class RoutesManager {
   static Route? onGenerateRoute(RouteSettings settings) {

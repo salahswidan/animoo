@@ -7,7 +7,7 @@ import '../../../core/resources/conts_values.dart';
 import '../../../core/resources/fonts_size_manager.dart';
 import '../../../core/resources/heights_manager.dart';
 import '../../../core/resources/padding_manager.dart';
-import '../../../core/widgets/app_Bar/simple_app_bar.dart';
+import '../../../core/widgets/app_bar/simple_app_bar.dart';
 import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/custom_required_password_field.dart';
 import '../../../core/widgets/spacing/vertical_space.dart';
@@ -71,7 +71,7 @@ class CreateNewPasswordForm extends StatelessWidget {
         VerticalSpace(HeightsManager.h8),
 
         RequiredRulesForPasswordSignUpPage(
-        //  listPasswordRulesOutputStream: Stream<List<PasswordRulesModel>>.empty(),
+          listPasswordRulesOutputStream: Stream<List<PasswordRulesModel>>.empty(),
           
         ),
         CustomRequiredPasswordField(
