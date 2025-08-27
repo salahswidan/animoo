@@ -26,7 +26,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   @override
   void initState() {
     super.initState();
-    _otpVerController = OtpVerController();
+    _otpVerController = OtpVerController(context);
   }
 
   @override
@@ -77,14 +77,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   VerticalSpace(HeightsManager.h41),
                   AppButton(
                     text: ConstsValuesManager.confirm,
-                    onTap: () async {
-                      _otpVerController.screenState = ScreenStatusState.loading;
-                      _otpVerController.changeScreenStateLoading();
-                      await Future.delayed(const Duration(seconds: 2));
-                      _otpVerController.screenState = ScreenStatusState.success;
-                      _otpVerController.changeScreenStateLoading();
-                      //?go to create new password after request on api
-                    },
+                    onTap: _otpVerController.onPressedConfirmButton,
                   ),
                   VerticalSpace(HeightsManager.h6),
                   Align(

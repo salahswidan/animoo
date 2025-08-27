@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:animoo/core/enums/screen_status_state.dart';
 import 'package:flutter/material.dart';
 
+import '../core/di/services/internet_checker_service.dart';
+import '../core/functions/app_scaffold_massanger.dart';
 import '../core/resources/conts_values.dart';
 
 class OtpVerController {
@@ -16,7 +18,9 @@ class OtpVerController {
   late StreamController<bool> loadingScreenStateController;
   late StreamSink<bool> loadingScreenStateInput;
 
-  OtpVerController() {
+  final BuildContext context;
+
+  OtpVerController(this.context) {
     initStreams();
     //? init screen state
     changeScreenStateLoading();
@@ -50,5 +54,34 @@ class OtpVerController {
 
   void changeScreenStateLoading() {
     loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
+  }
+
+  void _showNoInternetSnackBar(BuildContext context) {
+    screenState = ScreenStatusState.failure;
+    changeScreenStateLoading();
+    showAppSnackBar(
+      context,
+      "No internet connection",
+      onPressedAtRetry: () {
+        onPressedConfirmButton();
+      },
+    );
+  }
+
+  void onPressedConfirmButton() async {
+    screenState = ScreenStatusState.loading;
+    changeScreenStateLoading();
+    //? request api
+    var isInternetConnected = await InternetCheckerService();
+    bool result = await isInternetConnected();
+    if (result == true) {
+      //?now make api request
+      // _requestCheckOtpCodeAvailability(context);
+    } else {
+      _showNoInternetSnackBar(context);
+    }
+    screenState = ScreenStatusState.success;
+    changeScreenStateLoading();
+    //?go to create new password after request on api
   }
 }

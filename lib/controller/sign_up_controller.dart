@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../core/error/failure_model.dart';
+import '../core/functions/app_scaffold_massanger.dart';
 import '../core/functions/image_picker_service.dart';
 import '../core/functions/show_select_image_model_bottom_sheet.dart';
 import '../core/resources/conts_values.dart';
@@ -230,12 +231,16 @@ class SignUpController {
   void _showNoInternetSnackBar(BuildContext context) {
     screenState = ScreenStatusState.failure;
     changeLoadingScreenStatus();
-    showMySnackBar(context, "No internet connection");
+    showAppSnackBar(context, "No internet connection",  onPressedAtRetry: () {
+      onTapSignUp(context);
+    },
+      
+    );
   }
 
   void OnSuccessResquest(AuthResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
-    showMySnackBar(context, r.message ?? "");
+    showAppSnackBar(context, r.message ?? "");
     Navigator.pushNamed(
       context,
       RoutesName.otpVerificationScreen,
@@ -249,7 +254,9 @@ class SignUpController {
   void OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
     String massage = filterErrors(l.errors);
-    showMySnackBar(context, massage);
+    showAppSnackBar(context, massage,onPressedAtRetry: () {
+      onTapSignUp(context);
+    });
     print(l.errors);
   }
 
@@ -302,12 +309,6 @@ class SignUpController {
     loadingScreenStatusInput.add(screenState == ScreenStatusState.loading);
   }
 
-  void showMySnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
   String filterErrors(List<String> errors) {
     List<String> errorList = [];
     errors = errors.map((e) => e.toLowerCase().trim()).toList();
@@ -330,7 +331,10 @@ class SignUpController {
         "password must be at least",
         'password must be at least 12 characters one uppercase letter one lowercase letter one special character and one number',
       );
-      makeFilter("LateInitializationError: Local 'conn' has not been initialized", "please open xampp app");
+      makeFilter(
+        "LateInitializationError: Local 'conn' has not been initialized",
+        "please open xampp app",
+      );
     }
 
     return errorList.join(" , ");
