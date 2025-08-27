@@ -36,8 +36,17 @@ class AuthApi {
       print(response.toString());
       return Right(AuthResponse.fromJson(response));
     } on ServerException catch (e) {
+      Map<String, dynamic> errors;
+      if (e.data['error'] == null) {
+        errors = {
+          "error": [e.data['message'].toString()],
+          "statusCode": 504
+        };
+      } else {
+        errors = e.data;
+      }
       print(e.data.toString() + " server exception");
-      return Left(FailureModel.fromJson(e.data));
+      return Left(FailureModel.fromJson(errors));
     } catch (e) {
       print(e.toString() + " normal catch");
       return Left(

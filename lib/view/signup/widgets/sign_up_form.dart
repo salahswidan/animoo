@@ -54,7 +54,7 @@ class SignUpForm extends StatelessWidget {
   final TextEditingController confirmPasswordController;
   final VoidCallback? onPressedAtEyeConfirmPassword;
   final ValueChanged<String> onChangedPassword;
-  final GestureTapCallback onTapAtSelectImage;
+  final void Function(FormFieldState<File>) onTapAtSelectImage;
 
   final SelectImageStatus selectImageStatus;
   final void Function(String value) onChanged;

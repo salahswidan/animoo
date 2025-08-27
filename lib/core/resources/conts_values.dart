@@ -110,6 +110,8 @@ class ConstsValuesManager {
   static const String image = 'image';
 
   static const String enterValidPhoneNumber='Enter valid phone number';
+
+  static const String screenName = 'screenName';
 }
 
 class ConstsListsManager {

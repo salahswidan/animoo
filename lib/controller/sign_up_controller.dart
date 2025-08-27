@@ -85,8 +85,8 @@ class SignUpController {
     phoneController = TextEditingController();
 
     firstNameController.text = 'salah';
-    lastNameController.text = 'ahmed';
-    emailController.text = 'salahswidan@gmail.com';
+    lastNameController.text = 'swidan';
+    emailController.text = 'salahswidan212@gmail.com';
     passwordController.text = '123456qwerty!Q';
     confirmPasswordController.text = '123456qwerty!Q';
     phoneController.text = '01553798716';
@@ -181,7 +181,10 @@ class SignUpController {
     }
   }
 
-  Future<void> onTapAtSelectImage(BuildContext context) async {
+  Future<void> onTapAtSelectImage(
+    BuildContext context,
+    FormFieldState<File> state,
+  ) async {
     //?chow model bottom sheet
     await showSelectImageModelBottomSheet(
       context,
@@ -199,6 +202,7 @@ class SignUpController {
       selectImageStatus = SelectImageStatus.noImageSelected;
     } else {
       selectImageStatus = SelectImageStatus.imageSelected;
+      state.didChange(fileImage);
       checkValidate();
     }
   }
@@ -231,8 +235,15 @@ class SignUpController {
 
   void OnSuccessResquest(AuthResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
-    Navigator.pushNamed(context, RoutesName.otpVerificationScreen,arguments: emailController.getText);
-   
+    showMySnackBar(context, r.message ?? "");
+    Navigator.pushNamed(
+      context,
+      RoutesName.otpVerificationScreen,
+      arguments: {
+        ConstsValuesManager.email: emailController.getText,
+        ConstsValuesManager.screenName: ConstsValuesManager.signUp,
+      },
+    );
   }
 
   void OnFailureRequest(FailureModel l, BuildContext context) {
@@ -297,39 +308,31 @@ class SignUpController {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  String filterErrors(List<String> error) {
+  String filterErrors(List<String> errors) {
     List<String> errorList = [];
-    if (error.isNotEmpty) {
-      for (var err in error) {
-        final lowerErr = err.toLowerCase().trim();
-        if (lowerErr.contains("email already")) {
-          errorList.add('email already exists');
-        }
-        if (lowerErr.contains("invalid email")) {
-          errorList.add('enter valid email');
-        }
-        if (lowerErr.contains("phone")) {
-          errorList.add('phone is required');
-        }
-        if (lowerErr.contains("password")) {
-          errorList.add('password is required');
-        }
-        if (lowerErr.contains("first name")) {
-          errorList.add('first name is required');
-        }
-        if (lowerErr.contains("last name")) {
-          errorList.add('last name is required');
-        }
-        if (lowerErr.contains("image")) {
-          errorList.add('image is required');
-        }
-        if (lowerErr.contains("password must be at least")) {
-          errorList.add(
-            'password must be at least 12 characters one uppercase letter one lowercase letter one special character and one number',
-          );
-        }
+    errors = errors.map((e) => e.toLowerCase().trim()).toList();
+    void makeFilter(String contain, String msgError) {
+      if (errors.join("").contains(contain.toLowerCase())) {
+        errorList.add(msgError);
       }
     }
+
+    if (errors.isNotEmpty) {
+      makeFilter("email already", 'email already exists');
+      makeFilter("invalid email", 'enter valid email');
+      makeFilter("phone already", 'phone already exists');
+      makeFilter("phone", 'phone is required');
+      makeFilter("password", 'password is required');
+      makeFilter("first name", 'first name is required');
+      makeFilter("last name", 'last name is required');
+      makeFilter("image", 'image is required');
+      makeFilter(
+        "password must be at least",
+        'password must be at least 12 characters one uppercase letter one lowercase letter one special character and one number',
+      );
+      makeFilter("LateInitializationError: Local 'conn' has not been initialized", "please open xampp app");
+    }
+
     return errorList.join(" , ");
   }
 

@@ -1,9 +1,6 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../enums/select_image_status.dart';
 import '../resources/assets_values_manager.dart';
 import '../resources/border_radius_manager.dart';
@@ -24,15 +21,37 @@ class CustomSelectImageWidget extends StatelessWidget {
 
   final File? file;
   final SelectImageStatus selectImageStatus;
-  final GestureTapCallback onTapAtSelectImage;
+  final void Function(FormFieldState<File>) onTapAtSelectImage;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTapAtSelectImage,
-      child: file == null
-          ? NotFoundImage(selectImageStatus: selectImageStatus)
-          : FoundImage(file: file!, selectImageStatus: selectImageStatus),
+    return FormField<File>(
+      validator: (value) {
+        if (value == null) {
+          return "image is required";
+        }
+        else {
+          return null;
+        }
+      },
+      builder: (state) =>  InkWell(
+        onTap: () {
+          onTapAtSelectImage(state);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            file == null
+            ? NotFoundImage(selectImageStatus: selectImageStatus)
+            : FoundImage(file: file!, selectImageStatus: selectImageStatus),
+            if (state.errorText != null)
+              Text(
+                state.errorText!,
+                style: TextStyle(color: Colors.red, fontSize: 10, fontFamily: FontsManager.poppinsFontFamily),
+              ),
+          ],
+        )
+      ),
     );
   }
 }
