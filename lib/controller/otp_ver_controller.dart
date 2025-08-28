@@ -25,13 +25,11 @@ class OtpVerController {
   late StreamController<bool> loadingScreenStateController;
   late StreamSink<bool> loadingScreenStateInput;
 
+  late Stream<int> counterOutPutStream;
+  late StreamController<int> counterController;
+  late StreamSink<int> counterInput;
 
-   late Stream<int> counterOutPutStream;
-   late StreamController<int> counterController;
-   late StreamSink<int> counterInput;
-
-      final BuildContext context;
-
+  final BuildContext context;
 
   OtpVerController(this.context) {
     initStreams();
@@ -42,7 +40,7 @@ class OtpVerController {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       if (counter > 0) {
         counter--;
       } else {
@@ -87,10 +85,8 @@ class OtpVerController {
 
   void dispose() {
     disposeStreams();
-        _timer.cancel();
-
+    _timer.cancel();
   }
-  
 
   void changeScreenStateLoading() {
     loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
@@ -184,5 +180,9 @@ class OtpVerController {
       RoutesName.loginPage,
       (route) => false,
     );
+  }
+
+  void onPressedResendCode() {
+    print("resend code");
   }
 }
