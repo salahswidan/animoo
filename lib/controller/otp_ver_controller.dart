@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:animoo/core/enums/screen_status_state.dart';
+import 'package:animoo/core/resources/routes_manager.dart';
 import 'package:animoo/model/auth/otp_code_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import '../data/network/auth_api.dart';
 class OtpVerController {
   late String screenName;
   late String email;
+  late Timer _timer;
+  int counter = 60;
   String? otpCode;
 
   ScreenStatusState screenState = ScreenStatusState.initial;
@@ -22,12 +25,31 @@ class OtpVerController {
   late StreamController<bool> loadingScreenStateController;
   late StreamSink<bool> loadingScreenStateInput;
 
-  final BuildContext context;
+
+   late Stream<int> counterOutPutStream;
+   late StreamController<int> counterController;
+   late StreamSink<int> counterInput;
+
+      final BuildContext context;
+
 
   OtpVerController(this.context) {
     initStreams();
     //? init screen state
     changeScreenStateLoading();
+    //? start timer
+    startTimer();
+  }
+
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (counter > 0) {
+        counter--;
+      } else {
+        timer.cancel();
+      }
+      counterInput.add(counter);
+    });
   }
 
   void getArguments(BuildContext context) {
@@ -49,12 +71,26 @@ class OtpVerController {
     loadingScreenStateController = StreamController<bool>();
     loadingScreenStateInput = loadingScreenStateController.sink;
     loadingScreenStateOutputStream = loadingScreenStateController.stream;
+
+    counterController = StreamController<int>();
+    counterInput = counterController.sink;
+    counterOutPutStream = counterController.stream;
+  }
+
+  void disposeStreams() {
+    loadingScreenStateController.close();
+    loadingScreenStateInput.close();
+
+    counterController.close();
+    counterInput.close();
   }
 
   void dispose() {
-    loadingScreenStateController.close();
-    loadingScreenStateInput.close();
+    disposeStreams();
+        _timer.cancel();
+
   }
+  
 
   void changeScreenStateLoading() {
     loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
@@ -100,12 +136,10 @@ class OtpVerController {
 
     response.fold(
       (FailureModel l) {
-        print(l);
         OnFailureRequest(l, context);
       },
 
       (OtpCodeResponse r) {
-        print(r);
         OnSuccessResquest(r, context);
       },
     );
@@ -114,9 +148,41 @@ class OtpVerController {
 
   void OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
+    String message = _filterErrors(l.errors);
+    showAppSnackBar(
+      context,
+      message,
+      onPressedAtRetry: () {
+        onPressedConfirmButton();
+      },
+    );
+  }
+
+  String _filterErrors(List<String> errors) {
+    List<String> errorList = [];
+    errors = errors.map((e) => e.toLowerCase().trim()).toList();
+    void makeFilter(String contain, String msgError) {
+      if (errors.join("").contains(contain.toLowerCase())) {
+        errorList.add(msgError);
+      }
+    }
+
+    if (errors.isNotEmpty) {
+      makeFilter("email is required", 'email is required');
+      makeFilter("invalid verfication code", 'enter valid verification code');
+      makeFilter("database error", 'Database error');
+    }
+
+    return errorList.join(" , ");
   }
 
   void OnSuccessResquest(OtpCodeResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
+    //? go to sign in page
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.loginPage,
+      (route) => false,
+    );
   }
 }

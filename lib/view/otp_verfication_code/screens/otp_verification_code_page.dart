@@ -30,6 +30,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   }
 
   @override
+  void dispose() {
+    _otpVerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _otpVerController.getArguments(context);
     return AppModelProgressHud(
@@ -82,12 +88,21 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   VerticalSpace(HeightsManager.h6),
                   Align(
                     alignment: Alignment.center,
-                    child: Text(
-                      ConstsValuesManager.resendCodeIn,
-                      style: TextStyle(
-                        fontFamily: FontsManager.poppinsFontFamily,
-                        fontSize: FontSizeManager.s12,
-                        color: ColorManager.kBlackColor,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: StreamBuilder<int>(
+                        initialData: 60,
+                        stream: _otpVerController.counterOutPutStream,
+                        builder:
+                            (context, snapshot) => Text(
+                              ConstsValuesManager.resendCodeIn +
+                                  "${snapshot.data}",
+                              style: TextStyle(
+                                fontFamily: FontsManager.poppinsFontFamily,
+                                fontSize: FontSizeManager.s12,
+                                color: ColorManager.kBlackColor,
+                              ),
+                            ),
                       ),
                     ),
                   ),

@@ -5,6 +5,7 @@ import '../../../controller/sign_up_controller.dart';
 import '../../../core/resources/conts_values.dart';
 import '../../../core/resources/heights_manager.dart';
 import '../../../core/resources/padding_manager.dart';
+import '../../../core/resources/routes_manager.dart';
 import '../../../core/widgets/app_logo_and_title_widget.dart';
 import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/loading/app_madel_progress_hud.dart';
@@ -54,7 +55,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     VerticalSpace(HeightsManager.h9_15),
                     TitleSignUpPage(),
                     SignUpForm(
-                      listPasswordRulesOutputStream: signUpController.listPasswordRulesOutputStream,
+                      listPasswordRulesOutputStream:
+                          signUpController.listPasswordRulesOutputStream,
                       fileImageOutputData:
                           signUpController.fileImageOutputStream,
                       fileImage: signUpController.fileImage,
@@ -79,7 +81,10 @@ class _SignUpPageState extends State<SignUpPage> {
                         signUpController.onChangePassword(value);
                       },
                       onTapAtSelectImage: (FormFieldState<File> state) async {
-                        await signUpController.onTapAtSelectImage(context, state);
+                        await signUpController.onTapAtSelectImage(
+                          context,
+                          state,
+                        );
                       },
                       selectImageStatus: signUpController.selectImageStatus,
                       phoneController: signUpController.phoneController,
@@ -89,18 +94,17 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
 
                     AppButton(
-                      buttonStatusOutputStream: signUpController.signUpButtonStatusOutputStream,
+                      buttonStatusOutputStream:
+                          signUpController.signUpButtonStatusOutputStream,
                       text: ConstsValuesManager.signUp,
-                      onTap:
-                          
-                               () async {
-                             
-                                setState(() {});
-                                await signUpController.onTapSignUp(context);
-                              
-
-                              }
-                           
+                      onTap: () async {
+                        Navigator.pushNamed(
+                          context,
+                          RoutesName.otpVerificationScreen,
+                        );
+                        // setState(() {});
+                        //  await signUpController.onTapSignUp(context);
+                      },
                     ),
                     VerticalSpace(HeightsManager.h8),
                     SignInNow(

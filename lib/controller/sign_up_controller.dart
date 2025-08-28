@@ -253,7 +253,7 @@ class SignUpController {
 
   void OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
-    String massage = filterErrors(l.errors);
+    String massage = _filterErrors(l.errors);
     showAppSnackBar(context, massage,onPressedAtRetry: () {
       onTapSignUp(context);
     });
@@ -309,7 +309,7 @@ class SignUpController {
     loadingScreenStatusInput.add(screenState == ScreenStatusState.loading);
   }
 
-  String filterErrors(List<String> errors) {
+  String _filterErrors(List<String> errors) {
     List<String> errorList = [];
     errors = errors.map((e) => e.toLowerCase().trim()).toList();
     void makeFilter(String contain, String msgError) {
