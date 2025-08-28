@@ -1,5 +1,6 @@
 import 'package:animoo/core/error/failure_model.dart';
 import 'package:animoo/model/auth/auth_response.dart';
+import 'package:animoo/model/auth/otp_code_response.dart';
 import 'package:animoo/model/auth/user_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -36,19 +37,8 @@ class AuthApi {
       print(response.toString());
       return Right(AuthResponse.fromJson(response));
     } on ServerException catch (e) {
-      Map<String, dynamic> errors;
-      if (e.data['error'] == null) {
-        errors = {
-          "error": [e.data['message'].toString()],
-          "statusCode": 504
-        };
-      } else {
-        errors = e.data;
-      }
-      print(e.data.toString() + " server exception");
-      return Left(FailureModel.fromJson(errors));
+      return left(handleServerExceptionError(e));
     } catch (e) {
-      print(e.toString() + " normal catch");
       return Left(
         FailureModel.fromJson({
           'errors': [e.toString()],
@@ -58,35 +48,22 @@ class AuthApi {
     }
   }
 
-  static Future<Either<FailureModel, AuthResponse>> logIn(
-    UserModel user,
+  static Future<Either<FailureModel, OtpCodeResponse>> checkOtpAvailability(
+    String email,
+    String code,
   ) async {
     try {
       DioService dioService = getIt<DioService>();
 
       var response = await dioService.post(
-        path: ApiConstants.signUpEndpoint,
-        body: FormData.fromMap({
-          ApiConstants.firstName: user.firstName,
-          ApiConstants.lastName: user.lastName,
-          ApiConstants.email: user.email,
-          ApiConstants.password: user.password,
-          ApiConstants.phone: user.phone,
-          ApiConstants.image: await MultipartFile.fromFile(
-            user.image.path,
-            filename: user.image.path.split("/").last,
-          ),
-          // TODO add body
-        }),
+        path: ApiConstants.otpCheckEndpoint,
+        body: {ApiConstants.email: email, ApiConstants.code: code},
       );
 
-      print(response.toString());
-      return Right(AuthResponse.fromJson(response));
+      return Right(OtpCodeResponse.fromJson(response));
     } on ServerException catch (e) {
-      print(e.data.toString() + " server exception");
-      return Left(FailureModel.fromJson(e.data));
+      return left(handleServerExceptionError(e));
     } catch (e) {
-      print(e.toString() + " normal catch");
       return Left(
         FailureModel.fromJson({
           'errors': [e.toString()],
@@ -94,5 +71,20 @@ class AuthApi {
         }),
       );
     }
+  }
+
+  static FailureModel handleServerExceptionError(
+    ServerException e,
+  ) {
+    Map<String, dynamic> errors;
+    if (e.data['error'] == null) {
+      errors = {
+        "error": [e.data['message'].toString()],
+        "statusCode": 504,
+      };
+    } else {
+      errors = e.data;
+    }
+    return FailureModel.fromJson(errors);
   }
 }

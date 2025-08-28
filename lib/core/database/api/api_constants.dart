@@ -6,10 +6,13 @@ class ApiConstants {
 
   static const String baseUrl = 'http://10.0.2.2:8000';
   static const String signUpEndpoint = '/api/signup';
+  static const String otpCheckEndpoint = '/api/verfication_code';
   static const String firstName = 'firstName';
   static const String lastName = 'lastName';
   static const String email = 'email';
   static const String password = 'password';
   static const String phone = 'phone';
   static const String image = 'image';
+
+  static const String code = 'code';
 }
