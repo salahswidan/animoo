@@ -96,7 +96,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                             onPressed:
                                 snapshot.data != 0
                                     ? null
-                                    : _otpVerController.onPressedResendCode,
+                                    : _otpVerController
+                                        .onPressedResendCodeButton,
                             child: Text(
                               "${ConstsValuesManager.resendCodeIn} 00:${snapshot.data.toString().padLeft(2, '0')}",
                               style: TextStyle(

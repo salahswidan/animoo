@@ -11,6 +11,7 @@ import '../core/error/failure_model.dart';
 import '../core/functions/app_scaffold_massanger.dart';
 import '../core/resources/conts_values.dart';
 import '../data/network/auth_api.dart';
+import '../model/auth/new_otp_code_response.dart';
 
 class OtpVerController {
   late String screenName;
@@ -40,7 +41,8 @@ class OtpVerController {
   }
 
   void startTimer() {
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    counter = 60;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (counter > 0) {
         counter--;
       } else {
@@ -132,17 +134,17 @@ class OtpVerController {
 
     response.fold(
       (FailureModel l) {
-        OnFailureRequest(l, context);
+        _onFailureRequest(l, context);
       },
 
       (OtpCodeResponse r) {
-        OnSuccessResquest(r, context);
+        otpOnSuccessResquest(r, context);
       },
     );
     changeScreenStateLoading();
   }
 
-  void OnFailureRequest(FailureModel l, BuildContext context) {
+  void _onFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
     String message = _filterErrors(l.errors);
     showAppSnackBar(
@@ -172,7 +174,7 @@ class OtpVerController {
     return errorList.join(" , ");
   }
 
-  void OnSuccessResquest(OtpCodeResponse r, BuildContext context) {
+  void otpOnSuccessResquest(OtpCodeResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
     //? go to sign in page
     Navigator.pushNamedAndRemoveUntil(
@@ -182,7 +184,38 @@ class OtpVerController {
     );
   }
 
-  void onPressedResendCode() {
-    print("resend code");
+  void onPressedResendCodeButton() async {
+    screenState = ScreenStatusState.loading;
+    changeScreenStateLoading();
+    //? request api
+    var isInternetConnected = await InternetCheckerService();
+    bool result = await isInternetConnected();
+    if (result == true) {
+      //?now make api request
+      _requestNewOtpCode(context);
+    } else {
+      _showNoInternetSnackBar(context);
+      screenState = ScreenStatusState.failure;
+      changeScreenStateLoading();
+    }
+    //?go to create new password after request on api
+  }
+
+  void _requestNewOtpCode(BuildContext context) async {
+    Either<FailureModel, NewOtpCodeResponse> response =
+        await AuthApi.resendOtpCode(email);
+
+    response.fold(
+      (FailureModel l) {
+        _onFailureRequest(l, context);
+      },
+
+      (NewOtpCodeResponse r) {
+        showAppSnackBar(context, "resend OTP code successfully");
+        screenState = ScreenStatusState.success;
+        startTimer();
+      },
+    );
+    changeScreenStateLoading();
   }
 }

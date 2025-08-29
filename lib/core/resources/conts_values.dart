@@ -25,7 +25,7 @@ class ConstsValuesManager {
   static const String forgetYourPassword = 'Forget Your Password ?';
   static const String otpVerification = 'OTP Verification';
   static const String pleaseEnterThe4DigitCodeSentYourPhoneNumber =
-      'Please enter the 4 digit code sent your phone number';
+      'Please enter the 5 digit code sent your phone number';
   static const String password = 'Password';
   static const String confirm = 'Confirm';
 

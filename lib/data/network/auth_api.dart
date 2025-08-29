@@ -1,5 +1,6 @@
 import 'package:animoo/core/error/failure_model.dart';
 import 'package:animoo/model/auth/auth_response.dart';
+import 'package:animoo/model/auth/new_otp_code_response.dart';
 import 'package:animoo/model/auth/otp_code_response.dart';
 import 'package:animoo/model/auth/user_model.dart';
 import 'package:dartz/dartz.dart';
@@ -61,6 +62,29 @@ class AuthApi {
       );
 
       return Right(OtpCodeResponse.fromJson(response));
+    } on ServerException catch (e) {
+      return left(handleServerExceptionError(e));
+    } catch (e) {
+      return Left(
+        FailureModel.fromJson({
+          'errors': [e.toString()],
+          'statusCode': '500',
+        }),
+      );
+    }
+  }
+  static Future<Either<FailureModel, NewOtpCodeResponse>> resendOtpCode(
+    String email,
+  ) async {
+    try {
+      DioService dioService = getIt<DioService>();
+
+      var response = await dioService.post(
+        path: ApiConstants.resendNewOtpCodeEndpoint,
+        body: {ApiConstants.email: email},
+      );
+
+      return Right(NewOtpCodeResponse.fromJson(response));
     } on ServerException catch (e) {
       return left(handleServerExceptionError(e));
     } catch (e) {
