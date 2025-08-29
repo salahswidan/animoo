@@ -83,8 +83,13 @@ class _AppOtpVerificationTextFieldState
         Expanded(
           child: CustomTextFormField(
             onChanged: (value) {
-              goToNextFocusNode(value, focusNode2, controller1);
+              if (value.isEmpty) {
+                FocusScope.of(context).requestFocus(focusNode1);
+              } else {
+                goToNextFocusNode(value, focusNode2, controller1);
+              }
             },
+
             controller: controller1,
             focusNode: focusNode1,
             textAlign: TextAlign.center,
@@ -96,6 +101,9 @@ class _AppOtpVerificationTextFieldState
         Expanded(
           child: CustomTextFormField(
             onChanged: (value) {
+              if (value.isEmpty) {
+                FocusScope.of(context).requestFocus(focusNode1);
+              }
               goToNextFocusNode(value, focusNode3, controller2);
             },
             controller: controller2,
@@ -111,6 +119,9 @@ class _AppOtpVerificationTextFieldState
             focusNode: focusNode3,
             textAlign: TextAlign.center,
             onChanged: (value) {
+              if (value.isEmpty) {
+                FocusScope.of(context).requestFocus(focusNode2);
+              }
               goToNextFocusNode(value, focusNode4, controller3);
             },
             controller: controller3,
@@ -124,6 +135,9 @@ class _AppOtpVerificationTextFieldState
             focusNode: focusNode4,
             textAlign: TextAlign.center,
             onChanged: (value) {
+              if (value.isEmpty) {
+                FocusScope.of(context).requestFocus(focusNode3);
+              }
               goToNextFocusNode(value, focusNode5, controller4);
             },
             controller: controller4,
@@ -147,6 +161,9 @@ class _AppOtpVerificationTextFieldState
                       controller4.text.trim() +
                       controller5.text.trim(),
                 );
+              }
+              if (value.isEmpty) {
+                FocusScope.of(context).requestFocus(focusNode4);
               }
             },
             focusNode: focusNode5,
