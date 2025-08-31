@@ -61,6 +61,9 @@ class OtpVerController {
         email = arguments[ConstsValuesManager.email];
       }
     }
+    if (screenName == ConstsValuesManager.login) {
+      _requestNewOtpCode(context);
+    }
   }
 
   void startOtpVerification(String value) {

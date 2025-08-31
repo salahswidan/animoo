@@ -1,3 +1,4 @@
+import 'package:animoo/view/main_page/main_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../view/create_new_password/screens/create_new_password_page.dart';
@@ -21,6 +22,8 @@ class RoutesManager {
         widget = OtpVerificationPage();
       case RoutesName.createNewPassword:
         widget = CreateNewPasswordPage();
+      case RoutesName.mainPage:
+        widget = MainPage();
       default:
         widget = const UnknownRoutePage();
     }
@@ -35,4 +38,6 @@ class RoutesName {
   static const String forgetPassword = '/forgetPassword';
   static const String otpVerificationScreen = '/otpVerification';
   static const String createNewPassword = '/createNewPassword';
+
+  static const String mainPage = '/mainPage';
 }

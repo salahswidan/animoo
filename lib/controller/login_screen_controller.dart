@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:animoo/core/di/services/internet_checker_service.dart';
 import 'package:animoo/core/functions/app_scaffold_massanger.dart';
 import 'package:animoo/core/resources/extenstions.dart';
 import 'package:animoo/data/network/auth_api.dart';
-import 'package:animoo/model/auth/auth_response.dart';
 import 'package:animoo/model/auth/login_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,6 +72,8 @@ class LoginScreenController {
   void initTextControllers() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    emailController.text = 'salahswidan212@gmail.com';
+    passwordController.text = '123456qwerty!Q';
   }
 
   void dispose() {
@@ -139,31 +139,49 @@ class LoginScreenController {
         _OnSuccessResquest(r, context);
       },
     );
+    changeLoadingScreenState();
   }
 
   void changeLoadingScreenState() {
     loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
   }
-    void _OnSuccessResquest(LoginResponse r, BuildContext context) {
+
+  void _OnSuccessResquest(LoginResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
     showAppSnackBar(context, r.message ?? "");
-    // Navigator.pushNamed(
-    //   context,
-    //   RoutesName.otpVerificationScreen,
-    //   arguments: {
-    //     ConstsValuesManager.email: emailController.getText,
-    //     ConstsValuesManager.screenName: ConstsValuesManager.signUp,
-    //   },
-    // );
-
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.mainPage,
+      (route) => false,
+      arguments: {
+        ConstsValuesManager.email: emailController.getText,
+        ConstsValuesManager.screenName: ConstsValuesManager.signUp,
+      },
+    );
   }
-    void _OnFailureRequest(FailureModel l, BuildContext context) {
+
+  void _OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
     String massage = _filterErrors(l.errors);
-    showAppSnackBar(context, massage,onPressedAtRetry: () {
-      onPressedAtLoginButton();
-    });
-    print(l.errors);
+    showAppSnackBar(
+      context,
+      massage,
+      onPressedAtRetry:
+          massage.contains("Account not verified : Go To Verification Page")
+              ? null
+              : () {
+                onPressedAtLoginButton();
+              },
+    );
+    if (massage.contains("Account not verified : Go To Verification Page")) {
+      Navigator.of(context).pushNamed(
+        RoutesName.otpVerificationScreen,
+        arguments: {
+          ConstsValuesManager.email: emailController.getText,
+          ConstsValuesManager.screenName: ConstsValuesManager.login,
+        },
+      );
+    }
   }
 
   String _filterErrors(List<String> errors) {
@@ -179,11 +197,12 @@ class LoginScreenController {
       makeFilter("email is required", 'email is required');
       makeFilter("password is required", 'password is required');
       makeFilter("password or email not true", 'password or email not true');
-      makeFilter("Account not verified", 'Account not verified');
-     
+      makeFilter(
+        "Account not verified",
+        'Account not verified : Go To Verification Page',
+      );
     }
 
     return errorList.join(" , ");
   }
-
 }
