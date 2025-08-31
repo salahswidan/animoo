@@ -1,4 +1,4 @@
-
+import 'package:animoo/core/functions/app_validators.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +13,17 @@ class LoginForm extends StatelessWidget {
     super.key,
     required this.formKey,
     required this.onPressedAtEye,
-    required this.visible,
+    required this.eyeVisibleOutPutStream,
+    required this.emailController,
+    required this.passwordController, this.onChanged,
   });
 
   final GlobalKey<FormState> formKey;
   final VoidCallback? onPressedAtEye;
-  final bool visible;
+  final Stream<bool> eyeVisibleOutPutStream;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final void Function(String value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -29,25 +34,39 @@ class LoginForm extends StatelessWidget {
           CustomRequiredField(
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
-              //TODO:: add email validation
-              if (value == null || value.trim().isEmpty) {
-                return ConstsValuesManager.enterYourEmailAddress;
-              } else {
-                return null;
-              }
+              return AppValidators.emailValidator(value);
             },
-            controller: TextEditingController(),
+            onChanged: onChanged,
+            controller: emailController,
             title: ConstsValuesManager.email,
             hintText: ConstsValuesManager.enterYourEmailAddress,
           ),
           VerticalSpace(HeightsManager.h16),
 
-          CustomRequiredPasswordField(
-            title: ConstsValuesManager.password,
-            onPressedAtEye: onPressedAtEye,
-            visible: visible,
-            controller: TextEditingController(),
-            hintText: ConstsValuesManager.enterYourPassword,
+          StreamBuilder<bool>(
+            stream: eyeVisibleOutPutStream,
+            initialData: false,
+            builder: (context, snapshot) {
+              return CustomRequiredPasswordField(
+                usedValidate: true,
+                useDefaultErrorBuilder: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  } else if (value.length < 8) {
+                    return 'Password must be at least 8 characters';
+                  } else {
+                    return null;
+                  }
+                },
+                onChanged: onChanged,
+                title: ConstsValuesManager.password,
+                onPressedAtEye: onPressedAtEye,
+                visible: snapshot.data ?? false,
+                controller: passwordController,
+                hintText: ConstsValuesManager.enterYourPassword,
+              );
+            },
           ),
         ],
       ),

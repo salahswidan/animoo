@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:animoo/core/di/services/internet_checker_service.dart';
 import 'package:animoo/core/enums/button_states_enum.dart';
 import 'package:animoo/core/enums/screen_status_state.dart';
@@ -238,7 +237,7 @@ class SignUpController {
     );
   }
 
-  void OnSuccessResquest(AuthResponse r, BuildContext context) {
+  void _OnSuccessResquest(AuthResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
     showAppSnackBar(context, r.message ?? "");
     Navigator.pushNamed(
@@ -251,7 +250,7 @@ class SignUpController {
     );
   }
 
-  void OnFailureRequest(FailureModel l, BuildContext context) {
+  void _OnFailureRequest(FailureModel l, BuildContext context) {
     screenState = ScreenStatusState.failure;
     String massage = _filterErrors(l.errors);
     showAppSnackBar(context, massage,onPressedAtRetry: () {
@@ -354,10 +353,10 @@ class SignUpController {
 
     response.fold(
       (FailureModel l) {
-        OnFailureRequest(l, context);
+        _OnFailureRequest(l, context);
       },
       (AuthResponse r) {
-        OnSuccessResquest(r, context);
+        _OnSuccessResquest(r, context);
       },
     );
     changeLoadingScreenStatus();

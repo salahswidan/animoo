@@ -1,5 +1,6 @@
 import 'package:animoo/core/error/failure_model.dart';
 import 'package:animoo/model/auth/auth_response.dart';
+import 'package:animoo/model/auth/login_response.dart';
 import 'package:animoo/model/auth/new_otp_code_response.dart';
 import 'package:animoo/model/auth/otp_code_response.dart';
 import 'package:animoo/model/auth/user_model.dart';
@@ -73,6 +74,35 @@ class AuthApi {
       );
     }
   }
+
+  static Future<Either<FailureModel, LoginResponse>> login(
+    String email,
+    String password,
+  ) async {
+    try {
+      DioService dioService = getIt<DioService>();
+
+      var response = await dioService.get(
+        path: ApiConstants.loginEndpoint,
+        queryParameters: {
+          ApiConstants.email: email,
+          ApiConstants.password: password,
+        },
+      );
+      print(response.toString());
+      return Right(LoginResponse.fromJson(response));
+    } on ServerException catch (e) {
+      return left(handleServerExceptionError(e));
+    } catch (e) {
+      return Left(
+        FailureModel.fromJson({
+          'errors': [e.toString()],
+          'statusCode': '500',
+        }),
+      );
+    }
+  }
+
   static Future<Either<FailureModel, NewOtpCodeResponse>> resendOtpCode(
     String email,
   ) async {
@@ -97,9 +127,7 @@ class AuthApi {
     }
   }
 
-  static FailureModel handleServerExceptionError(
-    ServerException e,
-  ) {
+  static FailureModel handleServerExceptionError(ServerException e) {
     Map<String, dynamic> errors;
     if (e.data['error'] == null) {
       errors = {
