@@ -10,6 +10,7 @@ import '../../core/database/api/api_constants.dart';
 import '../../core/database/api/dio_service.dart';
 import '../../core/di/services/get_it.dart';
 import '../../core/error/server_exception.dart';
+import '../../model/auth/create_new_password_response.dart';
 
 class AuthApi {
   AuthApi._();
@@ -63,6 +64,35 @@ class AuthApi {
       );
 
       return Right(OtpCodeResponse.fromJson(response));
+    } on ServerException catch (e) {
+      return left(handleServerExceptionError(e));
+    } catch (e) {
+      return Left(
+        FailureModel.fromJson({
+          'errors': [e.toString()],
+          'statusCode': '500',
+        }),
+      );
+    }
+  }
+
+  static Future<Either<FailureModel, CreateNewPasswordResponse>>
+  createNewPassword(
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
+    try {
+      DioService dioService = getIt<DioService>();
+      var response = await dioService.post(
+        path: ApiConstants.createNewPasswordEndpoint,
+        body: {
+          ApiConstants.email: email,
+          ApiConstants.password: password,
+          ApiConstants.confirmPassword: confirmPassword,
+        },
+      );
+      return Right(CreateNewPasswordResponse.fromJson(response));
     } on ServerException catch (e) {
       return left(handleServerExceptionError(e));
     } catch (e) {

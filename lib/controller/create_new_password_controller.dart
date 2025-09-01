@@ -1,10 +1,18 @@
 import 'dart:async';
 
+import 'package:animoo/core/di/services/internet_checker_service.dart';
 import 'package:animoo/core/enums/button_states_enum.dart';
+import 'package:animoo/core/enums/screen_status_state.dart';
 import 'package:animoo/core/functions/app_scaffold_massanger.dart';
+import 'package:animoo/core/resources/extenstions.dart';
+import 'package:animoo/data/network/auth_api.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
+import '../core/error/failure_model.dart';
 import '../core/resources/conts_values.dart';
+import '../core/resources/routes_manager.dart';
+import '../model/auth/create_new_password_response.dart';
 
 class CreateNewPasswordController {
   bool eyeVisibleNewPassword = false;
@@ -12,6 +20,8 @@ class CreateNewPasswordController {
 
   late TextEditingController newPasswordController;
   late TextEditingController confirmPasswordController;
+
+  ScreenStatusState screenState = ScreenStatusState.initial;
 
   late GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -35,6 +45,17 @@ class CreateNewPasswordController {
 
   CreateNewPasswordController(this.context) {
     init();
+  }
+  late String email;
+
+  void getArguments() {
+    ModalRoute<Object?>? modalRoute = ModalRoute.of(context);
+    if (modalRoute != null) {
+      var arguments = modalRoute.settings.arguments;
+      if (arguments != null && arguments is Map<String, dynamic>) {
+        email = arguments[ConstsValuesManager.email];
+      }
+    }
   }
 
   void init() {
@@ -114,14 +135,102 @@ class CreateNewPasswordController {
     return newPasswordController.text == confirmPasswordController.text;
   }
 
-  void onTapAtSubmitButton() {
+  void onTapAtSubmitButton() async {
     if (checkPasswordAndConfirmPasswordMatch() == true) {
+      InternetCheckerService isInternetConnected = InternetCheckerService();
+      bool result = await isInternetConnected();
+      if (result == true) {
+        //?now make api request
+        _requestChangePassword();
+      } else {
+        if (context.mounted) {
+          showAppSnackBar(context, ConstsValuesManager.noInternetConnection);
+        }
+      }
     } else {
-      if (context.mounted)
+      if (context.mounted) {
         showAppSnackBar(
           context,
           ConstsValuesManager.passwordAndConfirmPasswordMustBeTheSame,
         );
+      }
     }
+  }
+
+  void _requestChangePassword() async {
+    screenState = ScreenStatusState.loading;
+    changeScreenStateLoading();
+    Either<FailureModel, CreateNewPasswordResponse> result =
+        await AuthApi.createNewPassword(
+          email,
+          newPasswordController.getText,
+          confirmPasswordController.getText,
+        );
+    print(result);
+    result.fold(
+      (FailureModel l) {
+        _onFailureRequest(l, context);
+      },
+
+      (CreateNewPasswordResponse r) {
+        print(r);
+        _onSuccessRequest(r, context);
+      },
+    );
+    changeScreenStateLoading();
+  }
+
+  void changeScreenStateLoading() {
+    loadingScreenInput.add(screenState == ScreenStatusState.loading);
+  }
+
+  void _onSuccessRequest(CreateNewPasswordResponse r, BuildContext context) {
+    screenState = ScreenStatusState.success;
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.loginPage,
+      (route) => false,
+    );
+  }
+
+  void _onFailureRequest(FailureModel l, BuildContext context) {
+    screenState = ScreenStatusState.failure;
+    String message = _filterErrors(l.errors);
+    showAppSnackBar(
+      context,
+      message,
+      onPressedAtRetry: () {
+        onTapAtSubmitButton();
+      },
+    );
+  }
+
+  String _filterErrors(List<String> errors) {
+    List<String> errorList = [];
+    errors = errors.map((e) => e.toLowerCase().trim()).toList();
+    void makeFilter(String contain, String msgError) {
+      if (errors.join("").contains(contain.toLowerCase())) {
+        errorList.add(msgError);
+      }
+    }
+
+    if (errors.isNotEmpty) {
+      makeFilter("email is required", 'email is required');
+      makeFilter("Not found this email", 'Not found this email');
+      makeFilter("password is required", 'enter valid password');
+      makeFilter("confirmPassword", 'enter valid confirm password');
+      makeFilter("Invalid email", 'enter valid email');
+      makeFilter(
+        "Password and confirm password not match",
+        'Password and confirm password not match',
+      );
+      makeFilter(
+        "Password must be at least 6 characters and include letters and numbers",
+        'Password must be at least 6 characters and include letters and numbers',
+      );
+    }
+
+    return errorList.join(" , ");
   }
 }
