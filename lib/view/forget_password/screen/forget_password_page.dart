@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:animoo/controller/forget_password_controller.dart';
+import 'package:animoo/core/functions/app_validators.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/colors_manager.dart';
 import '../../../core/resources/conts_values.dart';
@@ -14,8 +13,27 @@ import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/custom_required_field.dart';
 import '../../../core/widgets/spacing/vertical_space.dart';
 
-class ForgetPasswordPage extends StatelessWidget {
+class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
+
+  @override
+  State<ForgetPasswordPage> createState() => _ForgetPasswordPageState();
+}
+
+class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+  late ForgetPasswordController _forgetPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _forgetPasswordController = ForgetPasswordController();
+  }
+
+  @override
+  void dispose() {
+    _forgetPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,20 +69,27 @@ class ForgetPasswordPage extends StatelessWidget {
                   ),
                 ),
                 VerticalSpace(HeightsManager.h58),
-                CustomRequiredField(
-                  keyboardType: TextInputType.visiblePassword,
-                  controller: TextEditingController(),
-                  title: ConstsValuesManager.email,
-                  hintText: ConstsValuesManager.enterYourEmailAddress,
+                Form(
+                  key: _forgetPasswordController.forgetPasswordFormKey,
+                  child: CustomRequiredField(
+                    validator: (value) {
+                      return AppValidators.emailValidator(value);
+                    },
+                    onChanged: _forgetPasswordController.onChangeTextField,
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _forgetPasswordController.emailController,
+                    title: ConstsValuesManager.email,
+                    hintText: ConstsValuesManager.enterYourEmailAddress,
+                  ),
                 ),
                 VerticalSpace(HeightsManager.h151),
                 AppButton(
+                  buttonStatusOutputStream:
+                      _forgetPasswordController
+                          .sendCodeButtonStatusOutputStream,
                   text: ConstsValuesManager.sendCode,
                   onTap: () {
-                    //?go to otp page
-                    Navigator.of(
-                      context,
-                    ).pushNamed(RoutesName.otpVerificationScreen);
+                    _forgetPasswordController.onTapAtSendCodeButton(context);
                   },
                 ),
               ],

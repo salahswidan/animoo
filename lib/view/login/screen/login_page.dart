@@ -30,6 +30,11 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _loginScreenController = LoginScreenController(context);
   }
+  @override
+  void dispose() {
+    _loginScreenController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -46,10 +46,10 @@ class LoginScreenController {
     //? init text controllers
     initTextControllers();
     //? change button status
-    changeButtonStatus(ButtonStatesEnum.disabled);
+    changeLoginButtonStatus(ButtonStatesEnum.disabled);
   }
 
-  void changeButtonStatus(ButtonStatesEnum status) {
+  void changeLoginButtonStatus(ButtonStatesEnum status) {
     loginButtonStatusInput.add(status);
   }
 
@@ -91,7 +91,7 @@ class LoginScreenController {
   }
 
   void onPressedAtForgetPassword() {
-    Navigator.of(context).pushNamed(RoutesName.forgetPassword);
+    Navigator.of(context).pushNamed(RoutesName.forgetPasswordPage);
   }
 
   void onPressedAtLoginButton() async {
@@ -116,9 +116,9 @@ class LoginScreenController {
 
   void onChangeTextField(String value) {
     if (loginFormKey.currentState!.validate()) {
-      changeButtonStatus(ButtonStatesEnum.enabled);
+      changeLoginButtonStatus(ButtonStatesEnum.enabled);
     } else {
-      changeButtonStatus(ButtonStatesEnum.disabled);
+      changeLoginButtonStatus(ButtonStatesEnum.disabled);
     }
   }
 

@@ -19,6 +19,8 @@ class OtpVerController {
   late Timer _timer;
   int counter = 60;
   String? otpCode;
+  bool isCodeSend = false;
+
 
   ScreenStatusState screenState = ScreenStatusState.initial;
 
@@ -31,6 +33,7 @@ class OtpVerController {
   late StreamSink<int> counterInput;
 
   final BuildContext context;
+
 
   OtpVerController(this.context) {
     initStreams();
@@ -48,7 +51,7 @@ class OtpVerController {
       } else {
         timer.cancel();
       }
-      counterInput.add(counter);
+      if (!counterController.isClosed) counterInput.add(counter);
     });
   }
 
@@ -61,8 +64,11 @@ class OtpVerController {
         email = arguments[ConstsValuesManager.email];
       }
     }
-    if (screenName == ConstsValuesManager.login) {
+    if ((screenName == ConstsValuesManager.login ||
+        screenName == RoutesName.forgetPasswordPage )
+        && isCodeSend == false ) {
       _requestNewOtpCode(context);
+      isCodeSend = true;
     }
   }
 
@@ -94,7 +100,8 @@ class OtpVerController {
   }
 
   void changeScreenStateLoading() {
-    loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
+    if (!loadingScreenStateController.isClosed)
+      loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
   }
 
   void _showNoInternetSnackBar(BuildContext context) {
@@ -118,9 +125,13 @@ class OtpVerController {
       bool result = await isInternetConnected();
       if (result == true) {
         //?now make api request
-        _requestCheckOtpCodeAvailability(context);
+        if (context.mounted) {
+          _requestCheckOtpCodeAvailability(context);
+        }
       } else {
-        _showNoInternetSnackBar(context);
+        if (context.mounted) {
+          _showNoInternetSnackBar(context);
+        }
       }
       screenState = ScreenStatusState.success;
       changeScreenStateLoading();
@@ -179,13 +190,24 @@ class OtpVerController {
 
   void otpOnSuccessResquest(OtpCodeResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
-    //? go to sign in page
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.loginPage,
-      (route) => false,
+    if(screenName == RoutesName.forgetPasswordPage) {
+      //? go to create new password page
+      Navigator.pushNamed(
+        context,
+        RoutesName.createNewPassword,
+        arguments: {
+          ConstsValuesManager.email: email,
+        }, 
+      );
+    } else {
+      //? go to sign in page
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RoutesName.loginPage,
+        (route) => false,
     );
-  }
+    }
+  } 
 
   void onPressedResendCodeButton() async {
     screenState = ScreenStatusState.loading;
@@ -195,9 +217,13 @@ class OtpVerController {
     bool result = await isInternetConnected();
     if (result == true) {
       //?now make api request
-      _requestNewOtpCode(context);
+      if (context.mounted) {
+        _requestNewOtpCode(context);
+      }
     } else {
-      _showNoInternetSnackBar(context);
+      if (context.mounted) {
+        _showNoInternetSnackBar(context);
+      }
       screenState = ScreenStatusState.failure;
       changeScreenStateLoading();
     }
@@ -214,7 +240,9 @@ class OtpVerController {
       },
 
       (NewOtpCodeResponse r) {
-        showAppSnackBar(context, "resend OTP code successfully");
+        if (context.mounted) {
+          showAppSnackBar(context, "resend OTP code successfully");
+        }
         screenState = ScreenStatusState.success;
         startTimer();
       },
