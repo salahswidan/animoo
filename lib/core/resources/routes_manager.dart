@@ -1,4 +1,4 @@
-import 'package:animoo/view/main_page/main_page.dart';
+import 'package:animoo/view/main_page/screen/main_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../view/create_new_password/screens/create_new_password_page.dart';
