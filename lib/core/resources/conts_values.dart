@@ -112,6 +112,13 @@ class ConstsValuesManager {
   static const String enterValidPhoneNumber='Enter valid phone number';
 
   static const String screenName = 'screenName';
+
+  static const String tokenBoxName = 'tokensBox';
+
+  static const String accessToken = 'accessToken';
+
+  static const String refreshToken = 'refreshToken';
+  static const String isFirstTimeLogin = 'isFirstTimeLogin';
 }
 
 class ConstsListsManager {

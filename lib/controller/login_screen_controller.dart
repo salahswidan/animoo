@@ -6,7 +6,7 @@ import 'package:animoo/data/network/auth_api.dart';
 import 'package:animoo/model/auth/login_response.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
-
+import '../core/database/hive/hive_helper.dart';
 import '../core/enums/button_states_enum.dart';
 import '../core/enums/screen_status_state.dart';
 import '../core/error/failure_model.dart';
@@ -146,9 +146,13 @@ class LoginScreenController {
     loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
   }
 
-  void _OnSuccessResquest(LoginResponse r, BuildContext context) {
+  void _OnSuccessResquest(LoginResponse r, BuildContext context) async {
     screenState = ScreenStatusState.success;
-    showAppSnackBar(context, r.message ?? "");
+    showAppSnackBar(context, r.message);
+    await _storeToken(
+      accessToken: r.access_token,
+      refreshToken: r.refresh_token,
+    );
     Navigator.pushNamedAndRemoveUntil(
       context,
       RoutesName.mainPage,
@@ -204,5 +208,23 @@ class LoginScreenController {
     }
 
     return errorList.join(" , ");
+  }
+
+  Future<void> _storeToken({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
+    HiveHelper<String> hiveHelper = HiveHelper<String>(
+      ConstsValuesManager.tokenBoxName,
+    );
+    await hiveHelper.addValue(
+      key: ConstsValuesManager.accessToken,
+      value: accessToken,
+    );
+    await hiveHelper.addValue(
+      key: ConstsValuesManager.refreshToken,
+      value: refreshToken,
+    );
+    print("done");
   }
 }
