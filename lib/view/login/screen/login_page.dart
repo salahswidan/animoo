@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     _loginScreenController = LoginScreenController(context);
   }
+
   @override
   void dispose() {
     _loginScreenController.dispose();
@@ -40,7 +41,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AppModelProgressHud(
-        loadingOutputStream: _loginScreenController.loadingScreenStateOutputStream,
+        loadingOutputStream:
+            _loginScreenController.loadingScreenStateOutputStream,
         child: SafeArea(
           child: SingleChildScrollView(
             child: SizedBox(
@@ -52,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                     AppLogoAndTitleWidget(),
                     VerticalSpace(HeightsManager.h9_15),
                     TitleLoginPage(),
-        
+
                     LoginForm(
                       onChanged: _loginScreenController.onChangeTextField,
                       emailController: _loginScreenController.emailController,
@@ -64,13 +66,22 @@ class _LoginPageState extends State<LoginPage> {
                           _loginScreenController.eyeVisibleOutPutStream,
                     ),
                     ForgetPasswordLogin(
-                      onPressedAtForgetPassword: () =>
-                          _loginScreenController.onPressedAtForgetPassword(),
+                      rememberMeOutPutStream:
+                          _loginScreenController.rememberMeOutPutStream,
+                      onChangedRememberMe:
+                          _loginScreenController.onChangedRememberMe,
+                      onPressedAtForgetPassword:
+                          () =>
+                              _loginScreenController
+                                  .onPressedAtForgetPassword(),
                     ),
-        
-                    AppButton(text: ConstsValuesManager.login,
-                    buttonStatusOutputStream: _loginScreenController.loginButtonStatusOutputStream,
-                     onTap: _loginScreenController.onPressedAtLoginButton),
+
+                    AppButton(
+                      text: ConstsValuesManager.login,
+                      buttonStatusOutputStream:
+                          _loginScreenController.loginButtonStatusOutputStream,
+                      onTap: _loginScreenController.onPressedAtLoginButton,
+                    ),
                   ],
                 ),
               ),

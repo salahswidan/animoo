@@ -18,6 +18,7 @@ class LoginScreenController {
   ButtonStatesEnum loginButtonStatus = ButtonStatesEnum.disabled;
   ScreenStatusState screenState = ScreenStatusState.initial;
   bool eyeVisible = false;
+  bool rememberMe = false;
   //? text controllers
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -35,6 +36,11 @@ class LoginScreenController {
   late StreamController<bool> loadingScreenStateController;
 
   final BuildContext context;
+
+  late Stream<bool> rememberMeOutPutStream;
+  late Sink<bool> rememberMeInput;
+  late StreamController<bool> rememberMeController;
+
 
   LoginScreenController(this.context) {
     init();
@@ -61,12 +67,16 @@ class LoginScreenController {
     loginButtonStatusController = StreamController<ButtonStatesEnum>();
     loginButtonStatusInput = loginButtonStatusController.sink;
     loginButtonStatusOutputStream =
-        loginButtonStatusController.stream.asBroadcastStream();
+    loginButtonStatusController.stream.asBroadcastStream();
 
     loadingScreenStateController = StreamController<bool>();
     loadingScreenStateInput = loadingScreenStateController.sink;
     loadingScreenStateOutputStream =
         loadingScreenStateController.stream.asBroadcastStream();
+
+    rememberMeController = StreamController<bool>();
+    rememberMeInput = rememberMeController.sink;
+    rememberMeOutPutStream = rememberMeController.stream.asBroadcastStream();
   }
 
   void initTextControllers() {
@@ -83,6 +93,12 @@ class LoginScreenController {
   void disposeStreams() {
     eyeStreamController.close();
     eyeInput.close();
+    loginButtonStatusController.close();
+    loginButtonStatusInput.close();
+    loadingScreenStateController.close();
+    loadingScreenStateInput.close();
+    rememberMeController.close(); 
+    rememberMeInput.close();
   }
 
   void onPressedAtEye() {
@@ -153,6 +169,7 @@ class LoginScreenController {
       accessToken: r.access_token,
       refreshToken: r.refresh_token,
     );
+    await _storeRememberMe();
     Navigator.pushNamedAndRemoveUntil(
       context,
       RoutesName.mainPage,
@@ -225,6 +242,20 @@ class LoginScreenController {
       key: ConstsValuesManager.refreshToken,
       value: refreshToken,
     );
-    print("done");
+  }
+
+  void onChangedRememberMe(bool? value) {
+    rememberMe = !rememberMe ;
+    rememberMeInput.add(rememberMe);
+  }
+  
+  Future<void> _storeRememberMe() async {
+    HiveHelper<bool> hiveHelper = HiveHelper(
+      ConstsValuesManager.rememberMeBoxName,
+    );
+    await hiveHelper.addValue(
+      key: ConstsValuesManager.rememberMe,
+      value: rememberMe,
+    );
   }
 }
