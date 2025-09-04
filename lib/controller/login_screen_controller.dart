@@ -120,6 +120,7 @@ class LoginScreenController {
         _requestLogin();
       } else {
         showAppSnackBar(
+          // ignore: use_build_context_synchronously
           context,
           'No internet connection',
           onPressedAtRetry: () {
