@@ -22,6 +22,7 @@ class AnimoooApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RoutesManager.onGenerateRoute,
+          initialRoute: RoutesName.mainPage,
         );
       },
     );
