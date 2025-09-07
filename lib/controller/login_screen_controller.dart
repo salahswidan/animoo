@@ -41,10 +41,11 @@ class LoginScreenController {
   late Sink<bool> rememberMeInput;
   late StreamController<bool> rememberMeController;
 
-
   LoginScreenController(this.context) {
     init();
   }
+
+
 
   void init() {
     //? init controllers
@@ -53,6 +54,12 @@ class LoginScreenController {
     initTextControllers();
     //? change button status
     changeLoginButtonStatus(ButtonStatesEnum.disabled);
+    //? change remember me
+    changeRememberMe();
+  }
+
+  void changeRememberMe() {
+    rememberMeInput.add(rememberMe);
   }
 
   void changeLoginButtonStatus(ButtonStatesEnum status) {
@@ -67,7 +74,7 @@ class LoginScreenController {
     loginButtonStatusController = StreamController<ButtonStatesEnum>();
     loginButtonStatusInput = loginButtonStatusController.sink;
     loginButtonStatusOutputStream =
-    loginButtonStatusController.stream.asBroadcastStream();
+        loginButtonStatusController.stream.asBroadcastStream();
 
     loadingScreenStateController = StreamController<bool>();
     loadingScreenStateInput = loadingScreenStateController.sink;
@@ -97,7 +104,7 @@ class LoginScreenController {
     loginButtonStatusInput.close();
     loadingScreenStateController.close();
     loadingScreenStateInput.close();
-    rememberMeController.close(); 
+    rememberMeController.close();
     rememberMeInput.close();
   }
 
@@ -164,22 +171,25 @@ class LoginScreenController {
   }
 
   void _OnSuccessResquest(LoginResponse r, BuildContext context) async {
-    screenState = ScreenStatusState.success;
-    showAppSnackBar(context, r.message);
     await _storeToken(
       accessToken: r.access_token,
       refreshToken: r.refresh_token,
     );
     await _storeRememberMe();
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.mainPage,
-      (route) => false,
-      arguments: {
-        ConstsValuesManager.email: emailController.getText,
-        ConstsValuesManager.screenName: ConstsValuesManager.signUp,
-      },
-    );
+    screenState = ScreenStatusState.success;
+    if (context.mounted) showAppSnackBar(context, r.message);
+
+    goToMainPage();
+  }
+
+  void goToMainPage() {
+    if (context.mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RoutesName.mainPage,
+        (route) => false,
+      );
+    }
   }
 
   void _OnFailureRequest(FailureModel l, BuildContext context) {
@@ -246,10 +256,10 @@ class LoginScreenController {
   }
 
   void onChangedRememberMe(bool? value) {
-    rememberMe = !rememberMe ;
-    rememberMeInput.add(rememberMe);
+    rememberMe = !rememberMe;
+    changeRememberMe();
   }
-  
+
   Future<void> _storeRememberMe() async {
     HiveHelper<bool> hiveHelper = HiveHelper(
       ConstsValuesManager.rememberMeBoxName,

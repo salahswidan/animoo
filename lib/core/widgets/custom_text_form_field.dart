@@ -1,7 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../resources/border_radius_manager.dart';
 import '../resources/colors_manager.dart';
 import '../resources/fonts_size_manager.dart';
@@ -21,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     this.focusNode,
     this.onChanged,
     this.useDefaultErrorBuilder = true,
+    this.maxLines = 1,
   });
 
   final String? hintText;
@@ -35,12 +33,14 @@ class CustomTextFormField extends StatelessWidget {
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final bool useDefaultErrorBuilder;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       // height: HeightsManager.h44,
       child: TextFormField(
+        maxLines: maxLines,
         // errorBuilder: useDefaultErrorBuilder == true
         //     ? null
         //     : (context, errorText) => SizedBox(),
@@ -65,10 +65,7 @@ class CustomTextFormField extends StatelessWidget {
           fillColor: fillColor ?? ColorManager.kLightWhiteColor,
           hintText: hintText,
           hintStyle: TextStyle(color: ColorManager.kGrey2Color),
-          suffixIcon: Padding(
-            padding: EdgeInsets.zero,
-            child: suffixIcon,
-          ),
+          suffixIcon: Padding(padding: EdgeInsets.zero, child: suffixIcon),
 
           suffixIconConstraints: BoxConstraints(minHeight: 0, minWidth: 0),
 

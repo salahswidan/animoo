@@ -1,6 +1,5 @@
 import 'package:animoo/core/resources/colors_manager.dart';
 import 'package:animoo/core/resources/routes_manager.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +21,6 @@ class AnimoooApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RoutesManager.onGenerateRoute,
-          initialRoute: RoutesName.mainPage,
         );
       },
     );

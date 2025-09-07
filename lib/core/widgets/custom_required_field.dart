@@ -15,7 +15,7 @@ class CustomRequiredField extends StatelessWidget {
     required this.hintText,
     this.validator,
     this.onChanged,
-    required this.keyboardType,
+    required this.keyboardType, this.maxLines,
   });
 
   final String hintText;
@@ -24,6 +24,7 @@ class CustomRequiredField extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String? value)? validator;
   final void Function(String value)? onChanged;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,7 @@ class CustomRequiredField extends StatelessWidget {
         ),
         VerticalSpace(HeightsManager.h6),
         CustomTextFormField(
+          maxLines: maxLines,
           onChanged: onChanged,
           controller: controller,
           keyboardType: keyboardType,

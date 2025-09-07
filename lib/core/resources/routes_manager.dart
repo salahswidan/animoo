@@ -1,3 +1,4 @@
+import 'package:animoo/view/custom_splash_screen.dart/custom_splash_screen.dart';
 import 'package:animoo/view/main_page/screen/main_page.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +25,8 @@ class RoutesManager {
         widget = CreateNewPasswordPage();
       case RoutesName.mainPage:
         widget = MainPage();
+      case RoutesName.customSplashScreen:
+        widget = const CustomSplashScreen();
       default:
         widget = const UnknownRoutePage();
     }
@@ -33,11 +36,12 @@ class RoutesManager {
 
 class RoutesName {
   RoutesName._();
-  static const String loginPage = '/';
+  static const String loginPage = '/loginPage';
   static const String signupPage = '/signup';
   static const String forgetPasswordPage = '/forgetPassword';
   static const String otpVerificationScreen = '/otpVerification';
   static const String createNewPassword = '/createNewPassword';
 
   static const String mainPage = '/mainPage';
+   static const String customSplashScreen = '/';
 }

@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:animoo/core/resources/extenstions.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../core/enums/select_image_status.dart';
 import '../../../core/functions/app_validators.dart';
 import '../../../core/resources/assets_values_manager.dart';
