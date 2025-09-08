@@ -11,12 +11,12 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage>  with AutomaticKeepAliveClientMixin {
   late MainPageController _mainPageController;
   @override
   void initState() {
     super.initState();
-    _mainPageController = MainPageController();
+    _mainPageController = MainPageController(context);
   }
 
   @override
@@ -32,9 +32,31 @@ class _MainPageState extends State<MainPage> {
       stream: _mainPageController.currentIndexOutputStream,
       builder: (context, snapshot) {
         return Scaffold(
-          body: _mainPageController.pages[snapshot.data ?? 0],
+          body: PageView(
+            onPageChanged: (value) {
+              setState(() {
+                _mainPageController.onTapBottomNavigationBarItem(value);
+              });
+            },
+            controller: _mainPageController.pageController,
+            children: [
+              for (int i = 0; i < _mainPageController.pages.length; i++)
+                _mainPageController.hasVisited[i]
+                    ? _mainPageController.buildWidget(i)
+                    : (snapshot.data == i
+                        ? _mainPageController.buildWidget(i)
+                        : Container()),
+            ],
+          ),
           bottomNavigationBar: BottomNavigationBar(
-            onTap: _mainPageController.onTapBottomNavigationBarItem,
+            onTap: (value) {
+              _mainPageController.onTapBottomNavigationBarItem(value);
+              _mainPageController.pageController.animateToPage(
+                value,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
             currentIndex: snapshot.data ?? 0,
             showSelectedLabels: true,
             showUnselectedLabels: true,
@@ -73,4 +95,8 @@ class _MainPageState extends State<MainPage> {
       },
     );
   }
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

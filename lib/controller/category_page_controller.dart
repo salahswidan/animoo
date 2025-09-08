@@ -33,9 +33,20 @@ class CategoryPageController {
   late Sink<bool> loadingScreenStatusInput;
   final BuildContext context;
 
-  CategoryPageController(this.context) {
+  //? singleton pattern
+  static CategoryPageController? _instance;
+  CategoryPageController._internal(this.context) {
+    print("TestHomeController");
     init();
   }
+
+  factory CategoryPageController(BuildContext context){
+    return _instance ??= CategoryPageController._internal(context);
+  }
+
+  // CategoryPageController(this.context) {
+  //   init();
+  // }
 
   void init() {
     initControllers();
@@ -121,13 +132,10 @@ class CategoryPageController {
     //?chow model bottom sheet
     await showSelectImageModelBottomSheet(
       context,
-      
-        _onTapAtCamera
-      ,
 
-      
-        _onTapAtGallery
-      
+      _onTapAtCamera,
+
+      _onTapAtGallery,
     );
 
     //?check if image is selected

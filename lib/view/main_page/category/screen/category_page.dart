@@ -15,7 +15,7 @@ class CategoryPage extends StatefulWidget {
   State<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClientMixin {
   late CategoryPageController _categoryPageController;
 
   @override
@@ -23,15 +23,12 @@ class _CategoryPageState extends State<CategoryPage> {
     super.initState();
     _categoryPageController = CategoryPageController(context);
   }
-  @override
-  void dispose() {
-    _categoryPageController.dispose();
-    super.dispose();
-  }
+
 
 
   @override
   Widget build(BuildContext context) {
+    print("build category page");
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -104,21 +101,26 @@ class _CategoryPageState extends State<CategoryPage> {
                   ],
                 ),
                 VerticalSpace(22.h),
-          
+
                 CategoryFormField(
                   categoryFormKey: _categoryPageController.categoryFormKey,
-                  categoryNameController: _categoryPageController.categoryNameController,
-                 categoryDescriptionController: _categoryPageController.categoryDescriptionController, 
-                 onChanged: _categoryPageController.onChanged,
-                  categoryImageOutputStream: _categoryPageController.categoryFileImageOutputStream,
-                   onTapSelectImage: _categoryPageController.onTapSelectImage,
-                    selectImageStatus: _categoryPageController.selectImageStatus,
-          
+                  categoryNameController:
+                      _categoryPageController.categoryNameController,
+                  categoryDescriptionController:
+                      _categoryPageController.categoryDescriptionController,
+                  onChanged: _categoryPageController.onChanged,
+                  categoryImageOutputStream:
+                      _categoryPageController.categoryFileImageOutputStream,
+                  onTapSelectImage: _categoryPageController.onTapSelectImage,
+                  selectImageStatus: _categoryPageController.selectImageStatus,
                 ),
-          
+
                 VerticalSpace(31.h),
-                AppButton(text: "Save", onTap: () {},
-                buttonStatusOutputStream: _categoryPageController.saveButtonStatusOutputStream,
+                AppButton(
+                  text: "Save",
+                  onTap: () {},
+                  buttonStatusOutputStream:
+                      _categoryPageController.saveButtonStatusOutputStream,
                 ),
               ],
             ),
@@ -127,4 +129,8 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
     );
   }
+  
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
