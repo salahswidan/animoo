@@ -44,4 +44,8 @@ class RoutesName {
 
   static const String mainPage = '/mainPage';
    static const String customSplashScreen = '/';
+
+  static const String categoryPageDetails = '/categoryPageDetails';
+
+  static const String slash = '/';
 }

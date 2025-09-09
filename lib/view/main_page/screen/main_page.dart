@@ -11,7 +11,8 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>  with AutomaticKeepAliveClientMixin {
+class _MainPageState extends State<MainPage>
+    with AutomaticKeepAliveClientMixin {
   late MainPageController _mainPageController;
   @override
   void initState() {
@@ -27,17 +28,14 @@ class _MainPageState extends State<MainPage>  with AutomaticKeepAliveClientMixin
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return StreamBuilder<int>(
       initialData: 0,
       stream: _mainPageController.currentIndexOutputStream,
       builder: (context, snapshot) {
         return Scaffold(
           body: PageView(
-            onPageChanged: (value) {
-              setState(() {
-                _mainPageController.onTapBottomNavigationBarItem(value);
-              });
-            },
+            onPageChanged: _mainPageController.onPageChangedOfPageView,
             controller: _mainPageController.pageController,
             children: [
               for (int i = 0; i < _mainPageController.pages.length; i++)
@@ -49,14 +47,7 @@ class _MainPageState extends State<MainPage>  with AutomaticKeepAliveClientMixin
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
-            onTap: (value) {
-              _mainPageController.onTapBottomNavigationBarItem(value);
-              _mainPageController.pageController.animateToPage(
-                value,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            },
+            onTap: _mainPageController.onTapBottomNavigationBarItem,
             currentIndex: snapshot.data ?? 0,
             showSelectedLabels: true,
             showUnselectedLabels: true,
@@ -95,7 +86,7 @@ class _MainPageState extends State<MainPage>  with AutomaticKeepAliveClientMixin
       },
     );
   }
-  
+
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;

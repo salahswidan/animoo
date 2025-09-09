@@ -123,6 +123,8 @@ class ConstsValuesManager {
   static const String rememberMe = 'Remember Me';
 
   static const String rememberMeBoxName = 'rememberMeBox';
+
+  static const String homePageNavigationState = 'homePageNavigationState';
 }
 
 class ConstsListsManager {

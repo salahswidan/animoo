@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'package:animoo/controller/home_page_controller.dart';
 import 'package:animoo/view/main_page/category/screen/category_page.dart';
-import 'package:animoo/view/main_page/home/screen/home_page.dart';
+import 'package:animoo/view/main_page/home/screen/home_tap.dart';
 import 'package:flutter/material.dart';
-
+import '../core/di/get_it.dart';
 import 'category_page_controller.dart';
 
 class MainPageController {
@@ -17,6 +17,7 @@ class MainPageController {
   List<Widget?> pages = List.filled(5, null);
   List<bool> hasVisited = List.filled(5, false);
   CategoryPageController? categoryPageController;
+  HomePageController? homePageController;
 
   late final PageController pageController;
 
@@ -26,7 +27,8 @@ class MainPageController {
       hasVisited[index] = true;
       switch (index) {
         case 0:
-          pages[index] = HomePage();
+          homePageController ??= HomePageController();
+          pages[index] = HomeTap();
           break;
         case 1:
           //  categoryPageController ??= CategoryPageController(context);
@@ -76,8 +78,26 @@ class MainPageController {
     currentIndexInput.close();
   }
 
-  void onTapBottomNavigationBarItem(int value) {
+  void changeCurrentIndex(int value) {
     _currentIndex = value;
     currentIndexInput.add(value);
+  }
+
+  void onPageChangedOfPageView(int value) {
+    changeCurrentIndex(value);
+  }
+
+  void onTapBottomNavigationBarItem(int value) {
+    changeCurrentIndex(value);
+    pageController.animateToPage(
+      value,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    if (_currentIndex == 0) {
+      getIt<GlobalKey<NavigatorState>>(
+        instanceName: 'homePageNavigationState',
+      ).currentState?.popUntil((route) => route.isFirst);
+    }
   }
 }

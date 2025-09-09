@@ -28,6 +28,7 @@ class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print("build category page");
     return Scaffold(
       body: SafeArea(

@@ -17,7 +17,7 @@ class HomePageCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int length = 11;
+    int length = 5;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
