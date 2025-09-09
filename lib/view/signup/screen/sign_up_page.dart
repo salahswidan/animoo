@@ -5,7 +5,6 @@ import '../../../controller/sign_up_controller.dart';
 import '../../../core/resources/conts_values.dart';
 import '../../../core/resources/heights_manager.dart';
 import '../../../core/resources/padding_manager.dart';
-import '../../../core/resources/routes_manager.dart';
 import '../../../core/widgets/app_logo_and_title_widget.dart';
 import '../../../core/widgets/buttons/app_button.dart';
 import '../../../core/widgets/loading/app_madel_progress_hud.dart';
@@ -26,7 +25,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     signUpController = SignUpController();
   }

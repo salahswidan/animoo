@@ -1,7 +1,6 @@
 import 'package:animoo/controller/otp_ver_controller.dart';
 import 'package:animoo/core/widgets/loading/app_madel_progress_hud.dart';
 import 'package:flutter/material.dart';
-import '../../../core/enums/screen_status_state.dart';
 import '../../../core/resources/assets_values_manager.dart';
 import '../../../core/resources/colors_manager.dart';
 import '../../../core/resources/conts_values.dart';

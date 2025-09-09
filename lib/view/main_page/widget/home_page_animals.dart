@@ -36,7 +36,7 @@ class HomePageAnimals extends StatelessWidget {
 }
 
 class _AnimalCard extends StatelessWidget {
-  const _AnimalCard({super.key});
+  const _AnimalCard();
 
   @override
   Widget build(BuildContext context) {

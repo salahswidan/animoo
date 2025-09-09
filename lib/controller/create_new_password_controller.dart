@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:animoo/core/di/services/internet_checker_service.dart';
 import 'package:animoo/core/enums/button_states_enum.dart';
 import 'package:animoo/core/enums/screen_status_state.dart';
+import 'package:animoo/core/functions/app_navigations.dart';
 import 'package:animoo/core/functions/app_scaffold_massanger.dart';
 import 'package:animoo/core/resources/extenstions.dart';
 import 'package:animoo/data/network/auth_api.dart';
@@ -187,10 +188,9 @@ class CreateNewPasswordController {
   void _onSuccessRequest(CreateNewPasswordResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
 
-    Navigator.pushNamedAndRemoveUntil(
+    AppNavigation.pushNamedAndRemoveUntil(
       context,
       RoutesName.loginPage,
-      (route) => false,
     );
   }
 

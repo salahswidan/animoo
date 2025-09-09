@@ -23,7 +23,7 @@ class MainPageController {
 
   Widget buildWidget(int index) {
     if (!hasVisited[index]) {
-      print("building page$index");
+      debugPrint("building page$index");
       hasVisited[index] = true;
       switch (index) {
         case 0:

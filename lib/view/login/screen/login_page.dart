@@ -1,6 +1,7 @@
 import 'package:animoo/controller/login_screen_controller.dart';
 import 'package:animoo/core/widgets/loading/app_madel_progress_hud.dart';
 import 'package:flutter/material.dart';
+import '../../../core/functions/app_navigations.dart';
 import '../../../core/resources/conts_values.dart';
 import '../../../core/resources/heights_manager.dart';
 import '../../../core/resources/padding_manager.dart';
@@ -25,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
 
     super.initState();
     _loginScreenController = LoginScreenController(context);
@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       bottomNavigationBar: BottomNavBarLoginPage(
         onPressedSignUpNow: () {
-          Navigator.pushNamed(context, RoutesName.signupPage);
+          AppNavigation.pushNamed(context, RoutesName.signupPage);
         },
       ),
     );

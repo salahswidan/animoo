@@ -10,6 +10,7 @@ import '../core/database/hive/hive_helper.dart';
 import '../core/enums/button_states_enum.dart';
 import '../core/enums/screen_status_state.dart';
 import '../core/error/failure_model.dart';
+import '../core/functions/app_navigations.dart';
 import '../core/resources/conts_values.dart';
 import '../core/resources/routes_manager.dart';
 
@@ -114,7 +115,7 @@ class LoginScreenController {
   }
 
   void onPressedAtForgetPassword() {
-    Navigator.of(context).pushNamed(RoutesName.forgetPasswordPage);
+    AppNavigation.pushNamed( context, RoutesName.forgetPasswordPage);
   }
 
   void onPressedAtLoginButton() async {
@@ -184,10 +185,9 @@ class LoginScreenController {
 
   void goToMainPage() {
     if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
+      AppNavigation.pushNamedAndRemoveUntil(
         context,
         RoutesName.mainPage,
-        (route) => false,
       );
     }
   }
@@ -206,7 +206,8 @@ class LoginScreenController {
               },
     );
     if (massage.contains("Account not verified : Go To Verification Page")) {
-      Navigator.of(context).pushNamed(
+      AppNavigation.pushNamed(
+        context,
         RoutesName.otpVerificationScreen,
         arguments: {
           ConstsValuesManager.email: emailController.getText,

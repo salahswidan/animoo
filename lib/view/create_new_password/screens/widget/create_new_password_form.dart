@@ -8,7 +8,7 @@ import '../../../../model/auth/password_rules_model.dart';
 import '../../../signup/widgets/required_rules_for_password_sign_up_page.dart';
 
 class CreateNewPasswordForm extends StatelessWidget {
-  CreateNewPasswordForm({
+  const CreateNewPasswordForm({
     super.key,
     required this.newPasswordController,
     required this.confirmPasswordController,

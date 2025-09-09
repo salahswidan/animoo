@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../core/error/failure_model.dart';
+import '../core/functions/app_navigations.dart';
 import '../core/functions/app_scaffold_massanger.dart';
 import '../core/functions/image_picker_service.dart';
 import '../core/functions/show_select_image_model_bottom_sheet.dart';
@@ -216,13 +217,13 @@ class SignUpController {
         selectImageStatus == SelectImageStatus.imageSelected) {
       screenState = ScreenStatusState.loading;
       changeLoadingScreenStatus();
-      var isInternetConnected = await InternetCheckerService();
+      var isInternetConnected = InternetCheckerService();
       bool result = await isInternetConnected();
       if (result == true) {
         //?now make api request
-        _requestMakeNewUser(context);
+       if(context.mounted) _requestMakeNewUser(context);
       } else {
-        _showNoInternetSnackBar(context);
+       if(context.mounted) _showNoInternetSnackBar(context);
       }
     }
   }
@@ -240,7 +241,7 @@ class SignUpController {
   void _OnSuccessResquest(AuthResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
     showAppSnackBar(context, r.message ?? "");
-    Navigator.pushNamed(
+    AppNavigation.pushNamed(
       context,
       RoutesName.otpVerificationScreen,
       arguments: {
@@ -297,7 +298,7 @@ class SignUpController {
   void _onTapAtGallery(BuildContext context) async {
     fileImage = await ImagePickerService.pickImage(ImageSource.gallery);
     fileImageInput.add(fileImage);
-    Navigator.pop(context);
+   if(context.mounted) Navigator.pop(context);
   }
 
   void changePasswordRules() {

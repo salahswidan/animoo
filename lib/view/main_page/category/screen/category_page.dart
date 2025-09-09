@@ -29,7 +29,7 @@ class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    print("build category page");
+    debugPrint("build category page");
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -72,7 +72,8 @@ class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClie
                         Container(
                           padding: EdgeInsets.all(5.r),
                           decoration: BoxDecoration(
-                            color: ColorManager.kLightGreenColor.withOpacity(
+                            color: ColorManager.kLightGreenColor.withValues(
+                              alpha: 
                               0.10,
                             ),
                             borderRadius: BorderRadius.circular(32.r),
@@ -132,6 +133,5 @@ class _CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClie
   }
   
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

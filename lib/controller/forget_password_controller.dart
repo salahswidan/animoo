@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../core/enums/button_states_enum.dart';
+import '../core/functions/app_navigations.dart';
 import '../core/resources/conts_values.dart';
 import '../core/resources/routes_manager.dart';
 
@@ -60,7 +61,8 @@ class ForgetPasswordController {
   }
 
   void onTapAtSendCodeButton(BuildContext context) {
-    Navigator.of(context).pushNamed(
+    AppNavigation.pushNamed(
+      context,
       RoutesName.otpVerificationScreen,
       arguments: {
         ConstsValuesManager.email: emailController.text,

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../core/di/services/internet_checker_service.dart';
 import '../core/error/failure_model.dart';
+import '../core/functions/app_navigations.dart';
 import '../core/functions/app_scaffold_massanger.dart';
 import '../core/resources/conts_values.dart';
 import '../data/network/auth_api.dart';
@@ -65,7 +66,7 @@ class OtpVerController {
       }
     }
     if ((screenName == ConstsValuesManager.login ||
-        screenName == RoutesName.forgetPasswordPage )
+        screenName == RoutesName.forgetPasswordPage.route )
         && isCodeSend == false ) {
       _requestNewOtpCode(context);
       isCodeSend = true;
@@ -100,8 +101,9 @@ class OtpVerController {
   }
 
   void changeScreenStateLoading() {
-    if (!loadingScreenStateController.isClosed)
+    if (!loadingScreenStateController.isClosed) {
       loadingScreenStateInput.add(screenState == ScreenStatusState.loading);
+    }
   }
 
   void _showNoInternetSnackBar(BuildContext context) {
@@ -121,7 +123,7 @@ class OtpVerController {
       screenState = ScreenStatusState.loading;
       changeScreenStateLoading();
       //? request api
-      var isInternetConnected = await InternetCheckerService();
+      var isInternetConnected = InternetCheckerService();
       bool result = await isInternetConnected();
       if (result == true) {
         //?now make api request
@@ -190,9 +192,9 @@ class OtpVerController {
 
   void otpOnSuccessResquest(OtpCodeResponse r, BuildContext context) {
     screenState = ScreenStatusState.success;
-    if(screenName == RoutesName.forgetPasswordPage) {
+    if(screenName == RoutesName.forgetPasswordPage.route) {
       //? go to create new password page
-      Navigator.pushNamed(
+      AppNavigation.pushNamed(
         context,
         RoutesName.createNewPassword,
         arguments: {
@@ -201,10 +203,9 @@ class OtpVerController {
       );
     } else {
       //? go to sign in page
-      Navigator.pushNamedAndRemoveUntil(
+      AppNavigation.pushNamedAndRemoveUntil(
         context,
         RoutesName.loginPage,
-        (route) => false,
     );
     }
   } 
@@ -213,7 +214,7 @@ class OtpVerController {
     screenState = ScreenStatusState.loading;
     changeScreenStateLoading();
     //? request api
-    var isInternetConnected = await InternetCheckerService();
+    var isInternetConnected = InternetCheckerService();
     bool result = await isInternetConnected();
     if (result == true) {
       //?now make api request

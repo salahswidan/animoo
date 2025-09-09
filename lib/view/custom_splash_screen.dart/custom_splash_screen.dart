@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../core/database/hive/hive_helper.dart';
+import '../../core/functions/app_navigations.dart';
 import '../../core/resources/conts_values.dart';
 
 class CustomSplashScreen extends StatefulWidget {
@@ -22,16 +23,15 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
     bool rememberMe =
         await hiveHelper.getValue(key: ConstsValuesManager.rememberMe) ?? false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
+    AppNavigation.pushNamedAndRemoveUntil(
+      context,
       rememberMe == true ? RoutesName.mainPage : RoutesName.loginPage,
-      (route) => false,
     );
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     checkRememberMe();
   }

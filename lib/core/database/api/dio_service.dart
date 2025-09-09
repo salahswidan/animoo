@@ -17,7 +17,6 @@ class DioService extends ApiConsumer {
 
   @override
   Future delete({required String path, Map<String, dynamic>? queryParameters}) {
-    // TODO: implement delete
     throw UnimplementedError();
   }
 
@@ -138,7 +137,6 @@ class DioService extends ApiConsumer {
     Map<String, dynamic>? queryParameters,
     required Map<String, dynamic> body,
   }) {
-    // TODO: implement put
     throw UnimplementedError();
   }
 }

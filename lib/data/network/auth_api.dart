@@ -33,7 +33,6 @@ class AuthApi {
             user.image.path,
             filename: user.image.path.split("/").last,
           ),
-          // TODO add body
         }),
       );
 

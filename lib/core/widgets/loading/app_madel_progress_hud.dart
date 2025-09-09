@@ -15,7 +15,6 @@ class AppModelProgressHud extends StatelessWidget {
       initialData: false,
       builder: (context, snapshot) =>
        ModalProgressHUD(
-        child: child,
         inAsyncCall: snapshot.data ?? false,
         dismissible: false,
         progressIndicator: const CupertinoActivityIndicator(
@@ -23,6 +22,7 @@ class AppModelProgressHud extends StatelessWidget {
         ),
       
         blur: 5,
+        child: child,
       ),
     );
     
